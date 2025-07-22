@@ -15,7 +15,7 @@ export default function TableauRepartition({ periode_id }: { periode_id: string 
     const fetchData = async () => {
         setLoading(true)
         try {
-            const res = await fetch(`https://vnmijcjshzwwpbzjqgwx.supabase.co/functions/v1/tableau-repartion-?periode_id=${periode_id}&page=${page}&limit=${limit}`)
+            const res = await fetch(`https://kgdpgxvhqipihpgyhyux.supabase.co/functions/v1/tableau-repartion-?periode_id=${periode_id}&page=${page}&limit=${limit}`)
             const json = await res.json()
             if (json.error) throw new Error(json.error)
             setResume(json.resume || [])
@@ -30,7 +30,7 @@ export default function TableauRepartition({ periode_id }: { periode_id: string 
     const viderTable = async () => {
         if (!confirm('Confirmer la suppression ?')) return
         try {
-            const res = await fetch(`https://vnmijcjshzwwpbzjqgwx.supabase.co/functions/v1/tableau-repartion-?periode_id=${periode_id}&reset=true`)
+            const res = await fetch(`https://kgdpgxvhqipihpgyhyux.supabase.co/functions/v1/tableau-repartion-?periode_id=${periode_id}&reset=true`)
             const json = await res.json()
             if (json.error) throw new Error(json.error)
             toast.success('Table vidée')

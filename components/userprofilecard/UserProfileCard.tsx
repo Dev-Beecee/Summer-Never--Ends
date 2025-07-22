@@ -18,7 +18,7 @@ export function UserProfileCard({ inscriptionId }: { inscriptionId: string }) {
     const { toast } = useToast()
 
     const { data, error } = useSWR(
-        ['https://vnmijcjshzwwpbzjqgwx.supabase.co/functions/v1/get-user-participations', inscriptionId],
+        ['https://kgdpgxvhqipihpgyhyux.supabase.co/functions/v1/get-user-participations', inscriptionId],
         ([url, id]) => fetcher(url, id),
         { refreshInterval: 5000 }
     )

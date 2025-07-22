@@ -50,7 +50,7 @@ const fetcher = (url: string) => fetch(url).then(res => res.json())
 export function ChartAreaInteractive() {
     const [timeRange, setTimeRange] = React.useState("30d")
     const { data, error, isLoading } = useSWR(
-        `https://vnmijcjshzwwpbzjqgwx.supabase.co/functions/v1/dashboard-participation?timeRange=${timeRange}`,
+        `https://kgdpgxvhqipihpgyhyux.supabase.co/functions/v1/dashboard-participation?timeRange=${timeRange}`,
         fetcher
     )
 

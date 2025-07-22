@@ -28,7 +28,7 @@ export default function StatResume() {
 
     useEffect(() => {
         const fetchStats = async () => {
-            const res = await fetch("https://vnmijcjshzwwpbzjqgwx.supabase.co/functions/v1/statistiques", {
+            const res = await fetch("https://kgdpgxvhqipihpgyhyux.supabase.co/functions/v1/statistiques", {
                 method: "POST",
                 headers: {
                     'Content-Type': 'application/json',
@@ -54,7 +54,7 @@ export default function StatResume() {
         }
 
         const fetchParticipationsEnAttente = async () => {
-            const res = await fetch("https://vnmijcjshzwwpbzjqgwx.supabase.co/functions/v1/participations-en-attente", {
+            const res = await fetch("https://kgdpgxvhqipihpgyhyux.supabase.co/functions/v1/participations-en-attente", {
                 method: "POST",
                 headers: {
                     'Content-Type': 'application/json',

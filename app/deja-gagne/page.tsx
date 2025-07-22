@@ -29,7 +29,7 @@ export default function DejaGagnePage() {
                 setLoading(true)
                 setError(null)
 
-                const res = await fetch('https://vnmijcjshzwwpbzjqgwx.supabase.co/functions/v1/recuperer-lot', {
+                const res = await fetch('https://kgdpgxvhqipihpgyhyux.supabase.co/functions/v1/recuperer-lot', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ inscription_id: inscriptionId })

@@ -33,7 +33,7 @@ export default function TypeLotManager({
 
     const fetchTypeLots = async () => {
         try {
-            const res = await fetch('https://vnmijcjshzwwpbzjqgwx.supabase.co/functions/v1/type-lot')
+            const res = await fetch('https://kgdpgxvhqipihpgyhyux.supabase.co/functions/v1/type-lot')
             const json = await res.json()
             if (Array.isArray(json.data)) {
                 const sorted = json.data.sort((a: TypeLot, b: TypeLot) => a.priorite - b.priorite)
@@ -53,7 +53,7 @@ export default function TypeLotManager({
 
     const handleCreateTypeLot = async () => {
         if (!newTypeNom.trim()) return
-        const res = await fetch('https://vnmijcjshzwwpbzjqgwx.supabase.co/functions/v1/type-lot', {
+        const res = await fetch('https://kgdpgxvhqipihpgyhyux.supabase.co/functions/v1/type-lot', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
@@ -76,7 +76,7 @@ export default function TypeLotManager({
 
     const handleDeleteTypeLot = async (id: string) => {
         if (!confirm('Supprimer ce type ?')) return
-        const res = await fetch(`https://vnmijcjshzwwpbzjqgwx.supabase.co/functions/v1/type-lot?id=${id}`, {
+        const res = await fetch(`https://kgdpgxvhqipihpgyhyux.supabase.co/functions/v1/type-lot?id=${id}`, {
             method: 'DELETE'
         })
         if (res.ok) {

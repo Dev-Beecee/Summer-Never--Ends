@@ -39,7 +39,7 @@ export default function StatisticsDashboard() {
     const fetchStats = async () => {
         setLoading(true);
 
-        const res = await fetch("https://vnmijcjshzwwpbzjqgwx.supabase.co/functions/v1/statistiques", {
+        const res = await fetch("https://kgdpgxvhqipihpgyhyux.supabase.co/functions/v1/statistiques", {
             method: "POST",
             headers: {
                 'Content-Type': 'application/json',

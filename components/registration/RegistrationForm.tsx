@@ -78,7 +78,7 @@ export function RegistrationForm() {
       setRegistrationId(storedId)
 
       // Vérifier si l'utilisateur existe et rediriger immédiatement
-      fetch('https://vnmijcjshzwwpbzjqgwx.supabase.co/functions/v1/inscription', {
+      fetch('https://kgdpgxvhqipihpgyhyux.supabase.co/functions/v1/inscription', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -93,7 +93,7 @@ export function RegistrationForm() {
             router.push(`/participation?id=${storedId}`)
             return
           }
-          
+
           if (res.participations && res.participations.length > 0) {
             setHasParticipated(true)
           }
@@ -119,7 +119,8 @@ export function RegistrationForm() {
   // Dans la fonction onSubmit du composant RegistrationForm
   async function onSubmit(data: FormValues) {
     try {
-      const res = await fetch('https://vnmijcjshzwwpbzjqgwx.supabase.co/functions/v1/inscription', {
+      data.telephone = data.telephone.replace(/[\s.-]/g, '');
+      const res = await fetch('https://kgdpgxvhqipihpgyhyux.supabase.co/functions/v1/inscription', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -295,7 +296,7 @@ export function RegistrationForm() {
                 </FormControl>
                 <div className="space-y-1 leading-none">
                   <FormLabel className="font-normal">
-                  J’accepte que mes données personnelles saisies dans le formulaire soient utilisées pour être recontacté(e) par l’entreprise dans le cadre du jeu.*                  </FormLabel>
+                    J’accepte que mes données personnelles saisies dans le formulaire soient utilisées pour être recontacté(e) par l’entreprise dans le cadre du jeu.*                  </FormLabel>
                   <FormMessage />
                 </div>
               </FormItem>
@@ -316,9 +317,9 @@ export function RegistrationForm() {
                 </FormControl>
                 <div className="space-y-1 leading-none">
                   <FormLabel className="font-normal">
-                  J’accepte que mes données personelles saisies dans le formulaire soient utilisées à des fins commerciales.
+                    J’accepte que mes données personelles saisies dans le formulaire soient utilisées à des fins commerciales.
                   </FormLabel>
-                  
+
                 </div>
               </FormItem>
             )}
@@ -337,7 +338,7 @@ export function RegistrationForm() {
         >
           {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
           {hasParticipated ? "Retenter ma chance" : "Valider mon inscription"}
-         
+
         </Button>
 
         {/* Mention bas de page */}

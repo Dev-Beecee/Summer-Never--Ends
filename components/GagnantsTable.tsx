@@ -21,7 +21,7 @@ export function GagnantsTable() {
     useEffect(() => {
         const fetchGagnants = async () => {
             try {
-                const response = await fetch('https://vnmijcjshzwwpbzjqgwx.supabase.co/functions/v1/get-gagnants')
+                const response = await fetch('https://kgdpgxvhqipihpgyhyux.supabase.co/functions/v1/get-gagnants')
                 const data = await response.json()
                 setGagnants(data)
             } catch (error) {

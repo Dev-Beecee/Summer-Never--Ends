@@ -42,13 +42,13 @@ export default function AjouterLotDialog({ typesLot, onLotAdded }: AjouterLotDia
     const [recuperation, setRecuperation] = useState("")
 
     const fetchTypeLots = async () => {
-        const res = await fetch('https://vnmijcjshzwwpbzjqgwx.supabase.co/functions/v1/type-lot')
+        const res = await fetch('https://kgdpgxvhqipihpgyhyux.supabase.co/functions/v1/type-lot')
         const json = await res.json()
         if (Array.isArray(json.data)) setTypeLots(json.data)
     }
 
     const fetchLots = async () => {
-        const res = await fetch('https://vnmijcjshzwwpbzjqgwx.supabase.co/functions/v1/lots')
+        const res = await fetch('https://kgdpgxvhqipihpgyhyux.supabase.co/functions/v1/lots')
         const json = await res.json()
         if (json.data) setLots(Array.isArray(json.data) ? json.data : [json.data])
     }
@@ -67,14 +67,14 @@ export default function AjouterLotDialog({ typesLot, onLotAdded }: AjouterLotDia
         try {
             const formData = new FormData()
             formData.append('file', file)
-            const uploadRes = await fetch('https://vnmijcjshzwwpbzjqgwx.supabase.co/functions/v1/lots/upload', {
+            const uploadRes = await fetch('https://kgdpgxvhqipihpgyhyux.supabase.co/functions/v1/lots/upload', {
                 method: 'POST',
                 body: formData
             })
             const uploadData = await uploadRes.json()
             const photo_url = uploadData.data?.url
             if (!photo_url) throw new Error('Erreur upload image')
-            const res = await fetch('https://vnmijcjshzwwpbzjqgwx.supabase.co/functions/v1/lots', {
+            const res = await fetch('https://kgdpgxvhqipihpgyhyux.supabase.co/functions/v1/lots', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ titre, photo_url, type_lot_id: typeLotId, instructions, priorite, quantite_disponible: quantiteDisponible, date_distribution: dateDistribution, heure_distribution: heureDistribution, recuperation })

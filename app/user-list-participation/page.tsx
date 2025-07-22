@@ -39,7 +39,7 @@ export default function UserListParticipation() {
             try {
                 setLoading(true)
                 const response = await fetcher(
-                    'https://vnmijcjshzwwpbzjqgwx.supabase.co/functions/v1/get-user-participations',
+                    'https://kgdpgxvhqipihpgyhyux.supabase.co/functions/v1/get-user-participations',
                     inscriptionId
                 )
                 setData(response)

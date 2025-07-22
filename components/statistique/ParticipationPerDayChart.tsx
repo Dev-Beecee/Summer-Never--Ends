@@ -10,7 +10,7 @@ export default function ParticipationPerDayChart() {
 
   useEffect(() => {
     const fetchData = async () => {
-      const res = await fetch("https://vnmijcjshzwwpbzjqgwx.supabase.co/functions/v1/statistiques", {
+      const res = await fetch("https://kgdpgxvhqipihpgyhyux.supabase.co/functions/v1/statistiques", {
         method: "POST",
         headers: {
           'Content-Type': 'application/json',

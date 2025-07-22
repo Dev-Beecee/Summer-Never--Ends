@@ -8,7 +8,7 @@ const CreateRepartitionForm = () => {
     setLoading(true);
     setMessage('');
     try {
-      const response = await fetch('https://vnmijcjshzwwpbzjqgwx.supabase.co/functions/v1/create-repartition', {
+      const response = await fetch('https://kgdpgxvhqipihpgyhyux.supabase.co/functions/v1/create-repartition', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

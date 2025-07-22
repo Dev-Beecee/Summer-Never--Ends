@@ -53,7 +53,7 @@ export default function CreateLotsPage() {
             }
 
             try {
-                const typesResponse = await fetch("https://vnmijcjshzwwpbzjqgwx.supabase.co/functions/v1/type-lot")
+                const typesResponse = await fetch("https://kgdpgxvhqipihpgyhyux.supabase.co/functions/v1/type-lot")
                 const { data: typesData } = await typesResponse.json()
                 setTypesLot(Array.isArray(typesData) ? typesData : [])
 
@@ -72,7 +72,7 @@ export default function CreateLotsPage() {
 
     const fetchLots = async () => {
         try {
-            const response = await fetch("https://vnmijcjshzwwpbzjqgwx.supabase.co/functions/v1/lots")
+            const response = await fetch("https://kgdpgxvhqipihpgyhyux.supabase.co/functions/v1/lots")
             const { data } = await response.json()
             setLots(Array.isArray(data) ? data : [])
         } catch (error) {
@@ -86,7 +86,7 @@ export default function CreateLotsPage() {
             const confirmation = confirm("Êtes-vous sûr de vouloir supprimer ce lot ?")
             if (!confirmation) return
 
-            const response = await fetch(`https://vnmijcjshzwwpbzjqgwx.supabase.co/functions/v1/lots?id=${lotId}`, {
+            const response = await fetch(`https://kgdpgxvhqipihpgyhyux.supabase.co/functions/v1/lots?id=${lotId}`, {
                 method: "DELETE"
             })
 

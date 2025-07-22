@@ -42,7 +42,7 @@ export default function GamePage() {
         const participationId = searchParams.get('id')
         if (!participationId) return
 
-        fetch('https://vnmijcjshzwwpbzjqgwx.supabase.co/functions/v1/bright-function', {
+        fetch('https://kgdpgxvhqipihpgyhyux.supabase.co/functions/v1/bright-function', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ participation_id: participationId }),
@@ -69,7 +69,7 @@ export default function GamePage() {
 
         const run = async () => {
             try {
-                const res = await fetch('https://vnmijcjshzwwpbzjqgwx.supabase.co/functions/v1/attribuer-lot', {
+                const res = await fetch('https://kgdpgxvhqipihpgyhyux.supabase.co/functions/v1/attribuer-lot', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ participation_id: participationId }),

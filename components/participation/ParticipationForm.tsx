@@ -98,7 +98,7 @@ export function ParticipationForm() {
     useEffect(() => {
         const fetchRestaurants = async () => {
             try {
-                const response = await fetch('https://vnmijcjshzwwpbzjqgwx.supabase.co/functions/v1/list-restaurant', {
+                const response = await fetch('https://kgdpgxvhqipihpgyhyux.supabase.co/functions/v1/list-restaurant', {
                     method: 'GET',
                     headers: {
                         'Authorization': `Bearer ${process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY}`,
@@ -192,7 +192,7 @@ export function ParticipationForm() {
 
             // 🔗 Étape 1 : Obtenir l'URL pré-signée
             setUploadProgress(10);
-            const signedUrlRes = await fetch('https://vnmijcjshzwwpbzjqgwx.supabase.co/functions/v1/presigned-url', {
+            const signedUrlRes = await fetch('https://kgdpgxvhqipihpgyhyux.supabase.co/functions/v1/presigned-url', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
@@ -661,7 +661,7 @@ export function ParticipationForm() {
                 ocr_montant: parseFloat(values.ocr_montant).toFixed(2),
             };
 
-            const duplicateCheck = await fetch('https://vnmijcjshzwwpbzjqgwx.supabase.co/functions/v1/check-duplicate-participation', {
+            const duplicateCheck = await fetch('https://kgdpgxvhqipihpgyhyux.supabase.co/functions/v1/check-duplicate-participation', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(normalizedData),
@@ -676,7 +676,7 @@ export function ParticipationForm() {
             // 2. Si pas de doublon, insertion
             if (!duplicateResult.isDuplicate) {
                 // ✅ Vérifie la validité de la date via l'Edge Function
-                const checkRes = await fetch('https://vnmijcjshzwwpbzjqgwx.supabase.co/functions/v1/check-periode', {
+                const checkRes = await fetch('https://kgdpgxvhqipihpgyhyux.supabase.co/functions/v1/check-periode', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
@@ -735,7 +735,7 @@ export function ParticipationForm() {
                 // Dans le onSubmit, s'assurer que le montant est bien formaté à 2 décimales
                 values.ocr_montant = parseFloat(values.ocr_montant).toFixed(2);
 
-                const participationRes = await fetch('https://vnmijcjshzwwpbzjqgwx.supabase.co/functions/v1/participation', {
+                const participationRes = await fetch('https://kgdpgxvhqipihpgyhyux.supabase.co/functions/v1/participation', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
