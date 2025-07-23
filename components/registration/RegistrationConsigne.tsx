@@ -39,8 +39,7 @@ export function RegistrationConsigne() {
           </p>
         </CardContent>
       </Card>
-      <h3 className="text-sm  text-center text-[#01C9E7] uppercase" style={{ fontWeight: 700, fontSize: 20 }}>Enregistres tes infos</h3>
-      <p className="text-sm text-center mb-[30px]" style={{ fontWeight: 700, color: 'black' }}>En t’inscrivant ci-dessous, tes coordonnées seront utilisées pour te contacter en cas de gain.</p>
+      
     </div>
   );
 }

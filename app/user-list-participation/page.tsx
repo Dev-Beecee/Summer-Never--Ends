@@ -138,6 +138,12 @@ export default function UserListParticipation() {
                                                 {p.ocr_montant} €
                                             </span>
                                         </div>
+                                        <div className=" w-full flex flex-col gap-2 mt-6 bg-white rounded-lg p-2">
+                                            
+                                            <span className="text-lg font-bold text-[#01C9E7] text-center">
+                                                +{p.score_ajoute} points
+                                            </span>
+                                        </div>
                                     </div>
 
                                     {/* Section résultat du tirage */}
@@ -193,11 +199,7 @@ export default function UserListParticipation() {
       </Dialog>
     </div>
                                                 </>
-                                            ) : (
-                                                <div className="w-full text-center">
-                                                    <p className="font-medium text-white text-2xl">Tu as perdu !</p>
-                                                </div>
-                                            )}
+                                            ) : null}
                                         </div>
                                     </div>
                                 </div>
