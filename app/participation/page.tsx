@@ -41,10 +41,11 @@ export default function ParticipationPage() {
     return (
         <main className="min-h-screen p-6 ">
             <div className="max-w-4xl mx-auto">
-                <div className="flex justify-center mb-8">
+               
+                <RegistrationHeader />
+                 <div className="flex justify-center mb-8">
                     <UserProfileCard inscriptionId={inscriptionId} />
                 </div>
-                <RegistrationHeader />
                 <ParticipationForm />
             </div>
         </main>

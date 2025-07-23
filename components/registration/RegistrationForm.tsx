@@ -183,12 +183,12 @@ export function RegistrationForm() {
             name="nom"
             render={({ field }) => (
               <FormItem>
-                <FormLabel className="text-white">Nom</FormLabel>
+                <FormLabel className="text-black">Nom</FormLabel>
                 <FormControl>
                   <Input
                     placeholder="Nom"
                     {...field}
-                    className="bg-[#8A2E92] border-0 border-b border-b-white text-white placeholder:text-white/70 rounded-none"
+                    className="border-0 border-b border-b-black text-black placeholder:text-black/70 rounded-none"
                     autoComplete="family-name"
                   />
                 </FormControl>
@@ -202,12 +202,12 @@ export function RegistrationForm() {
             name="prenom"
             render={({ field }) => (
               <FormItem>
-                <FormLabel className="text-white">Prénom</FormLabel>
+                <FormLabel className="text-black">Prénom</FormLabel>
                 <FormControl>
                   <Input
                     placeholder="Prénom"
                     {...field}
-                    className="bg-[#8A2E92] border-0 border-b border-b-white text-white placeholder:text-white/70 rounded-none"
+                    className="border-0 border-b border-b-black text-black placeholder:text-black/70 rounded-none"
                     autoComplete="given-name"
                   />
                 </FormControl>
@@ -223,13 +223,13 @@ export function RegistrationForm() {
           name="email"
           render={({ field }) => (
             <FormItem>
-              <FormLabel className="text-white">Email</FormLabel>
+              <FormLabel className="text-black">Email</FormLabel>
               <FormControl>
                 <Input
                   type="email"
                   placeholder="votre@email.com"
                   {...field}
-                  className="bg-[#8A2E92] border-0 border-b border-b-white text-white placeholder:text-white/70 rounded-none"
+                  className="border-0 border-b border-b-black text-black placeholder:text-black/70 rounded-none"
                   autoComplete="email"
                 />
               </FormControl>
@@ -244,13 +244,13 @@ export function RegistrationForm() {
           name="telephone"
           render={({ field }) => (
             <FormItem>
-              <FormLabel className="text-white">Téléphone</FormLabel>
+              <FormLabel className="text-black">Téléphone</FormLabel>
               <FormControl>
                 <Input
                   type="tel"
                   placeholder="06 12 34 56 78"
                   {...field}
-                  className="bg-[#8A2E92] border-0 border-b border-b-white text-white placeholder:text-white/70 rounded-none"
+                  className="border-0 border-b border-b-black text-black placeholder:text-black/70 rounded-none"
                   autoComplete="tel"
                 />
               </FormControl>
@@ -274,7 +274,7 @@ export function RegistrationForm() {
                   />
                 </FormControl>
                 <div className="space-y-1 leading-none">
-                  <FormLabel className="font-normal">
+                  <FormLabel className="font-normal text-black">
                     Je certifie que ma participation fait suite à l'achat d'un Menu Best Of ou Maxi Best Of dans un restaurant McDonald's de Guadeloupe sur la période du 17 juillet au 31 août 2025.*
                   </FormLabel>
                   <FormMessage />
@@ -327,10 +327,11 @@ export function RegistrationForm() {
         </div>
 
         {/* Bouton */}
+        <div className="flex justify-center">
         <Button
           type="submit"
           className={cn(
-            "w-full transition-all duration-300 btn",
+            " transition-all duration-300 btn",
             isLoading ? "bg-primary/80" : "bg-primary hover:bg-primary/90"
           )}
           style={{ fontWeight: 700 }}
@@ -340,9 +341,10 @@ export function RegistrationForm() {
           {hasParticipated ? "Retenter ma chance" : "Valider mon inscription"}
 
         </Button>
+</div>
 
         {/* Mention bas de page */}
-        <p className="text-center text-xs text-white mt-4">
+        <p className="text-center text-xs text-black mt-4">
           * Champs obligatoires
         </p>
       </form>

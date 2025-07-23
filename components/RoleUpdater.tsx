@@ -11,6 +11,14 @@ export default function RoleUpdater() {
         setLoading(true)
         const supabase = createClientComponentClient()
 
+        const { data: session } = await supabase.auth.getSession()
+
+        if (!session) {
+            setMessage('Utilisateur non authentifié')
+            setLoading(false)
+            return
+        }
+
         const { data, error } = await supabase.auth.updateUser({
             data: {
                 role: 'admin' // Change selon ton besoin

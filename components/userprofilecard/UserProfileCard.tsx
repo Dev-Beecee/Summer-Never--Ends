@@ -50,11 +50,24 @@ export function UserProfileCard({ inscriptionId }: { inscriptionId: string }) {
         <div className="w-full flex justify-center">
             <div
                 onClick={handleClick}
-                className="flex items-center justify-between  rounded-2xl px-6 py-4 shadow cursor-pointer hover:shadow-md transition-shadow max-w-md w-full border border-white"
+                className="flex items-center justify-between rounded-2xl px-6 py-4 cursor-pointer hover:shadow-md transition-shadow max-w-md w-full bg-[#01C9E7] text-white"
+                style={{ boxShadow: '2px 2px 0px 0px #015D6B' }}
             >
                 <div className="basis-[90%]">
-                    <h3 className="font-bold text-center ">{formattedName}</h3>
-                    <p className="text-sm text-center ">{participationText}</p>
+                    <h3 className="font-bold ">{formattedName}</h3>
+                    <p className="text-sm ">{participationText}</p>
+                    <div className=" justify-center items-center gap-4 mt-2">
+                        <div className="flex text-center justify-between items-center">
+                            <p className="text-xs ">Points</p>
+                            <p className="font-semibold text-lg">{data.user.score}</p>
+                        </div>
+                        <div className="flex text-center justify-between items-center">
+                            <p className="text-xs ">Position</p>
+                            <p className="font-semibold text-lg">
+                                {data.user.classement}/{data.user.totalInscrits}
+                            </p>
+                        </div>
+                    </div>
                 </div>
                 <div className="ml-4 text-black basis-[10%]">
                     <svg
@@ -62,7 +75,7 @@ export function UserProfileCard({ inscriptionId }: { inscriptionId: string }) {
                         className="h-5 w-5"
                         fill="none"
                         viewBox="0 0 24 24"
-                        stroke="#FFFFFF"
+                        stroke="#FFFF"
                     >
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
                     </svg>

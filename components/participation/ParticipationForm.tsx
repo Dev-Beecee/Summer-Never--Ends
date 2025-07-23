@@ -31,8 +31,8 @@ const schema = z.object({
     ocr_date_achat: z.string().min(6, { message: 'Date invalide' }),
     ocr_montant: z.string().min(1, { message: 'Montant requis' }),
     ocr_heure_achat: z.string().min(5, { message: 'Heure invalide' }).regex(/^\d{2}:\d{2}:\d{2}$/, { message: 'Format attendu HH:MM:SS' }),
-    contient_menu_mxbo: z.boolean(),
     id: z.string().optional(),
+    statut_validation: z.string().optional(), // Ajout de la propriété statut_validation
 })
 
 type FormValues = z.infer<typeof schema>
@@ -64,7 +64,6 @@ export function ParticipationForm() {
             ocr_date_achat: '',
             ocr_montant: '',
             ocr_heure_achat: '',
-            contient_menu_mxbo: false,
             id: '',
         },
     })
@@ -557,7 +556,6 @@ export function ParticipationForm() {
                 ocr_date_achat: extracted.ocr_date_achat ? convertToHTMLDate(extracted.ocr_date_achat) : '',
                 ocr_montant: extracted.ocr_montant ? extracted.ocr_montant.replace(',', '.').replace(/\s/g, '') : '',
                 ocr_heure_achat: extracted.ocr_heure_achat || '',
-                contient_menu_mxbo: extracted.contient_menu_mxbo || false,
                 id: ''
             });
 
@@ -591,7 +589,6 @@ export function ParticipationForm() {
                     ocr_date_achat: '',
                     ocr_montant: '',
                     ocr_heure_achat: '',
-                    contient_menu_mxbo: false,
                     statut_validation: 'invalide',
                     raison_invalide: "Impossible de lire les informations du ticket",
                     created_at: new Date().toISOString(),
@@ -719,6 +716,48 @@ export function ParticipationForm() {
                     return;
                 }
 
+                // 🧮 Étape 2 : Calcul du score si ocr_montant est valide
+                const ocr_montant = parseFloat(values.ocr_montant);
+                if (ocr_montant && typeof ocr_montant === 'number') {
+                    const montantArrondi = Math.ceil(ocr_montant); // montant TTC arrondi à l'euro supérieur
+                    const score = montantArrondi * 100 * 3;
+                    
+                    // Récupérer le score actuel
+                    const { data: currentUser, error: fetchError } = await supabase
+                        .from('inscription')
+                        .select('score')
+                        .eq('id', inscriptionId)
+                        .single();
+                    
+                    if (fetchError) {
+                        toast({
+                            title: 'Erreur',
+                            description: 'Erreur lors de la récupération du score actuel',
+                            variant: 'destructive'
+                        });
+                        return;
+                    }
+                    
+                    // Calculer le nouveau score
+                    const currentScore = currentUser?.score || 0;
+                    const newScore = currentScore + score;
+                    
+                    // Mettre à jour le score dans la table inscription
+                    const { error: scoreError } = await supabase
+                        .from('inscription')
+                        .update({ score: newScore })
+                        .eq('id', inscriptionId);
+                        
+                    if (scoreError) {
+                        toast({
+                            title: 'Erreur',
+                            description: 'Erreur mise à jour du score',
+                            variant: 'destructive'
+                        });
+                        return;
+                    }
+                }
+
                 // ✅ Enregistre la participation via la nouvelle Edge Function
                 const participationPayload = {
                     inscription_id: inscriptionId,
@@ -770,44 +809,37 @@ export function ParticipationForm() {
                     localStorage.setItem('last_participation_id', participationId);
                 }
 
-                // ✅ Redirection ou message selon contient_menu_mxbo
-                if (values.contient_menu_mxbo) {
-                    // Nouvelle logique : si déjà gagné, redirige vers deja-gagne
-                    if (result.result === 'Déjà joué' && result.gain === true && participationId) {
-                        router.push(`/deja-gagne?id=${participationId}`)
-                    } else if (participationId) {
-                        router.push(`/game?id=${participationId}`);
-                    } else {
-                        toast({
-                            title: 'Erreur',
-                            description: 'Impossible de retrouver l\'identifiant de participation.',
-                            variant: 'destructive',
+                // Enregistrer l'historique du score après avoir obtenu l'ID de participation
+                if (participationId && ocr_montant && typeof ocr_montant === 'number') {
+                    const montantArrondi = Math.ceil(ocr_montant);
+                    const score = montantArrondi * 100 * 3;
+                    
+                    const { error: historiqueError } = await supabase
+                        .from('historique_score')
+                        .insert({
+                            inscription_id: inscriptionId,
+                            participation_id: participationId,
+                            score_ajoute: score,
+                            motif: `Participation validée - Montant: ${ocr_montant}€`
                         });
+                        
+                    if (historiqueError) {
+                        console.error('Erreur lors de l\'enregistrement de l\'historique du score:', historiqueError);
+                    }
+                }
+
+                // ✅ Redirection vers le jeu
+                if (participationId) {
+                    // Nouvelle logique : si déjà gagné, redirige vers deja-gagne
+                    if (result.result === 'Déjà joué' && result.gain === true) {
+                        router.push(`/deja-gagne?id=${participationId}`)
+                    } else {
+                        router.push(`/game?id=${participationId}`);
                     }
                 } else {
-                    // ✅ Enregistre la participation rejetée avec statut 'invalide'
-                    const participationData = {
-                        inscription_id: inscriptionId,
-                        image_url: uploadedImageUrl,
-                        ...values,
-                        statut_validation: 'invalide',
-                        raison_invalide: "Votre ticket ne contient pas de Menu Best Of ou Maxi Best Of",
-                        created_at: new Date().toISOString(),
-                    };
-                    
-                    // Supprimer le champ id s'il existe
-                    if ('id' in participationData) {
-                        delete participationData.id;
-                    }
-                    
-                    const { error: insertError } = await supabase.from('participation').insert([participationData]);
-                    if (insertError) {
-                        console.error('Erreur lors de l\'enregistrement de la participation invalide:', insertError);
-                    }
-
                     toast({
-                        title: 'Désolé',
-                        description: 'Votre ticket ne contient pas de menu MXBO, vous ne pouvez pas participer au jeu',
+                        title: 'Erreur',
+                        description: 'Impossible de retrouver l\'identifiant de participation.',
                         variant: 'destructive',
                     });
                 }
@@ -818,7 +850,6 @@ export function ParticipationForm() {
                     ocr_date_achat: '',
                     ocr_montant: '',
                     ocr_heure_achat: '',
-                    contient_menu_mxbo: false,
                     id: '',
                 });
                 setImage(null);
@@ -873,10 +904,10 @@ export function ParticipationForm() {
     return (
         <form
             onSubmit={form.handleSubmit(onSubmit)}
-            className="space-y-6 max-w-2xl mx-auto p-6 rounded-lg mt-10 border border-white text-black"
+            className="space-y-6 max-w-2xl mx-auto p-6 rounded-lg mt-10 text-black"
         >
-            <h2 className="text-xl font-semibold text-center text-white ">Je tente ma chance</h2>
-            <p className="text-center text-white ">Je joins une photo de mon ticket :</p>
+            <h2 className="text-xl font-semibold text-center text-black ">Je tente ma chance</h2>
+            <p className="text-center text-black ">Je joins une photo de mon ticket :</p>
 
             {/* Photo du ticket */}
             <div className="space-y-2">
@@ -892,7 +923,8 @@ export function ParticipationForm() {
 
                     <label
                         htmlFor="ticket-upload"
-                        className="cursor-pointer px-4 py-2 btn shadow  font-bold rounded-full inline-block"
+                        className="cursor-pointer px-4 py-2 btn shadow font-bold rounded-full inline-block"
+                        style={{ boxShadow: '2px 2px 0px 0px #015D6B' }}
                     >
                         PRENDRE UNE PHOTO
                     </label>
@@ -903,11 +935,11 @@ export function ParticipationForm() {
                     <div className="mt-2">
                         <div className="w-full bg-gray-200 rounded-full h-2.5">
                             <div
-                                className="bg-[#FFB700] h-2.5 rounded-full"
+                                className="bg-[#01C9E7] h-2.5 rounded-full"
                                 style={{ width: `${uploadProgress}%` }}
                             />
                         </div>
-                        <p className="text-xs text-right mt-1 text-white">
+                        <p className="text-xs text-right mt-1 text-black">
                             {uploadProgress}% complété
                         </p>
                     </div>
@@ -915,7 +947,7 @@ export function ParticipationForm() {
 
                 {/* Aperçu de l'image */}
                 {imagePreview && (
-                    <div className="mt-4 border rounded-md overflow-hidden">
+                    <div className="mt-4  overflow-hidden">
                         <img
                             src={imagePreview}
                             alt="Aperçu du ticket"
@@ -930,7 +962,7 @@ export function ParticipationForm() {
                 <div className="grid gap-4 md:grid-cols-2">
                     {autoDetectedRestaurant && (
                         <div className="space-y-2">
-                            <Label className="text-white" htmlFor="restaurant-name">Nom du restaurant *</Label>
+                            <Label className="text-black" htmlFor="restaurant-name">Nom du restaurant *</Label>
                             <Input
                                 id="restaurant-name"
                                 {...form.register('ocr_restaurant')}
@@ -942,7 +974,7 @@ export function ParticipationForm() {
                     )}
 
                     <div className="space-y-2">
-                        <Label className="text-white" htmlFor="purchase-date">Date d'achat *</Label>
+                        <Label className="text-black" htmlFor="purchase-date">Date d'achat *</Label>
                         <Input
                             id="purchase-date"
                             type="date"
@@ -962,7 +994,7 @@ export function ParticipationForm() {
                     </div>
 
                     <div className="space-y-2">
-                        <Label className="text-white" htmlFor="purchase-time">Heure d'achat *</Label>
+                        <Label className="text-black" htmlFor="purchase-time">Heure d'achat *</Label>
                         <Input
                             id="purchase-time"
                             type="time"
@@ -979,7 +1011,7 @@ export function ParticipationForm() {
                     </div>
 
                     <div className="space-y-2">
-                        <Label className="text-white" htmlFor="amount">Montant (€) *</Label>
+                        <Label className="text-black" htmlFor="amount">Montant (€) *</Label>
                         <Input
                             id="amount"
                             type="text"

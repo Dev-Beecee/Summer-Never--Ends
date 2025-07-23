@@ -1,5 +1,6 @@
 "use client"
 
+import UpdateUserRole from "@/components/UpdateUserRole"
 import { useRouter } from "next/navigation"
 
 export default function UnauthorizedPage() {
@@ -16,6 +17,7 @@ export default function UnauthorizedPage() {
                 >
                     Retour au dashboard
                 </button>
+               
             </div>
         </div>
     )

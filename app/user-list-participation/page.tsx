@@ -82,7 +82,8 @@ export default function UserListParticipation() {
                         </div>
                         <button
                             onClick={() => router.back()}
-                            className="flex items-center gap-2 px-4 py-2 rounded-[40px] border border-white bg-[#FFBC0D] text-[#8A2E92] transition-colors"
+                            className="flex items-center gap-2 px-4 py-2  bg-[#01C9E7] text-white transition-colors"
+                            style={{ boxShadow: '2px 2px 0px 0px #015D6B' }}
                         >
                             <svg
                                 xmlns="http://www.w3.org/2000/svg"
@@ -107,7 +108,7 @@ export default function UserListParticipation() {
                     {data.participations?.length > 0 ? (
                         <div className="space-y-6">
                             {data.participations.map((p: any) => (
-                                <div key={p.id} className="p-4 border rounded-lg  ">
+                                <div key={p.id} className="p-4 bg-[#01C9E7] text-white rounded-lg  ">
                                     <div className="">
                                         <div>
                                             <span>Restaurant détecté:</span>

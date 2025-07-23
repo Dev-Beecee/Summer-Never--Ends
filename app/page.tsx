@@ -8,6 +8,7 @@ import { RegistrationPageSkeleton } from '@/components/registration/Registration
 import { supabase } from '@/lib/supabase-client'
 
 
+
 export default function Home() {
   const [dateDebut, setDateDebut] = useState<Date | null>(null)
   const [dateFin, setDateFin] = useState<Date | null>(null)
@@ -56,8 +57,10 @@ export default function Home() {
 
   return (
     <div className="min-h-screen ">
-      <div className="container max-w-2xl mx-auto px-4 py-12">
+      
+            <div className="container max-w-2xl mx-auto px-4 py-12">
         <Suspense fallback={<RegistrationPageSkeleton />}>
+       
           <RegistrationHeader />
           <RegistrationConsigne />
           <RegistrationForm />
