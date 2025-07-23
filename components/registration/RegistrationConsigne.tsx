@@ -8,11 +8,11 @@ export function RegistrationConsigne() {
     <div className="flex flex-col items-center gap-6 max-w-xl mx-auto text-white">
       
       {/* Première Card */}
-      <Card className="bg-transparent text-center">
+      <Card className="bg-transparent text-center" style={{ border: 'none', boxShadow: 'none' }}>
         <CardContent className="p-6 flex flex-col items-center gap-4">
           <p className="text-sm font-medium ">Du <span style={{ fontWeight: 700 }}>04 au 31 août</span></p>
           <h2 className="text-lg font-bold  leading-snug ">
-          Scanne ton ticket, cumule des points et tente de gagner d’incroyables lots!
+          Scanne ton ticket, cumule des points et tente de gagner d'incroyables lots!
           </h2>
          
           <a href="#form">
@@ -24,7 +24,7 @@ export function RegistrationConsigne() {
       </Card>
 
       {/* Deuxième Card */}
-      <Card className=" bg-transparent text-left mb-[45px]">
+      <Card className=" bg-transparent text-left mb-[45px]" style={{ border: 'none', boxShadow: 'none'}}>
         <CardContent className="p-6 flex flex-col gap-4">
           <h3 className="text-lg font-bold  text-center text-[#01C9E7]" style={{ fontWeight: 700, fontSize: 25 }}>Comment ça marche ?</h3>
           <ul className="list-disc pl-5 space-y-2 text-sm ">

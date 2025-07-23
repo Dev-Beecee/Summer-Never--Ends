@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import Link from 'next/link';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Trophy, Medal, Award } from 'lucide-react';
@@ -31,12 +32,23 @@ const EDGE_FUNCTION_URL = 'https://kgdpgxvhqipihpgyhyux.supabase.co/functions/v1
 
 export default function ClassementComponent({ 
   mode, 
-  inscriptionId, 
+  inscriptionId: propInscriptionId, 
   className = '' 
 }: ClassementComponentProps) {
   const [data, setData] = useState<ClassementData | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [inscriptionId, setInscriptionId] = useState<string | null>(propInscriptionId || null);
+
+  // Récupération automatique de l'ID d'inscription depuis localStorage
+  useEffect(() => {
+    if (!propInscriptionId && typeof window !== 'undefined') {
+      const storedId = localStorage.getItem('inscription_id');
+      if (storedId) {
+        setInscriptionId(storedId);
+      }
+    }
+  }, [propInscriptionId]);
 
   useEffect(() => {
     const fetchClassement = async () => {
@@ -68,8 +80,28 @@ export default function ClassementComponent({
       }
     };
 
-    fetchClassement();
+    if (inscriptionId) {
+      fetchClassement();
+    } else {
+      setLoading(false);
+    }
   }, [mode, inscriptionId]);
+
+  // Scroll automatique vers la position de l'utilisateur
+  useEffect(() => {
+    if (data?.utilisateur && mode === 'classement') {
+      // Attendre que le DOM soit mis à jour
+      setTimeout(() => {
+        const userElement = document.querySelector('[data-user-position="true"]');
+        if (userElement) {
+          userElement.scrollIntoView({ 
+            behavior: 'smooth', 
+            block: 'center' 
+          });
+        }
+      }, 100);
+    }
+  }, [data, mode]);
 
   const getRankIcon = (rank: number) => {
     switch (rank) {
@@ -147,58 +179,63 @@ export default function ClassementComponent({
   }
 
   return (
-    <Card className={className}>
+    <Card className={`${className} border-none shadow-none`}>
       <CardHeader>
         <CardTitle className="gap-2 text-center text-[#01C9E7]">
          
-          {mode === 'accueil' ? 'Le classement actuel' : 'Classement Général'}
+          {mode === 'accueil' ? 'Le classement actuel' : ''}
         </CardTitle>
       </CardHeader>
       <CardContent>
         <div className="space-y-3">
-          {data.classement.map((entry) => (
-            <div
-              key={entry.rang}
-              className={`flex items-center justify-between p-3 rounded-lg transition-colors ${
-                data.utilisateur && 
-                entry.nom_affiche === data.utilisateur.nom_affiche && 
-                entry.score === data.utilisateur.score
-                  ? 'bg-primary/10 border border-primary/20'
-                  : 'bg-muted/50 hover:bg-muted/70'
-              }`}
-            >
-              <div className="flex items-center gap-3">
-                <Badge variant={getRankBadgeVariant(entry.rang)} className="flex items-center gap-1">
-                  {getRankIcon(entry.rang)}
-                </Badge>
-                <span className="font-medium">{entry.nom_affiche}</span>
+          {data.classement.map((entry) => {
+            const isCurrentUser = data.utilisateur && 
+              entry.nom_affiche === data.utilisateur.nom_affiche && 
+              entry.score === data.utilisateur.score;
+            
+            return (
+              <div
+                key={entry.rang}
+                data-user-position={isCurrentUser ? "true" : "false"}
+                className={`flex items-center justify-between p-3 rounded-lg transition-colors ${
+                  isCurrentUser
+                    ? 'border-2 border-[#01C9E7]'
+                    : ''
+                }`}
+                style={isCurrentUser ? { backgroundColor: '#01C9E7' } : {}}
+              >
+                <div className="flex items-center gap-3">
+                  <Badge variant={getRankBadgeVariant(entry.rang)} className="flex items-center gap-1">
+                    {getRankIcon(entry.rang)}
+                  </Badge>
+                  <span className={`font-medium ${isCurrentUser ? 'text-white' : ''}`}>
+                    {entry.nom_affiche}
+                    {isCurrentUser && ' (Vous)'}
+                  </span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <span className={`text-lg font-bold ${isCurrentUser ? 'text-white' : 'text-primary'}`}>
+                    {entry.score}
+                  </span>
+                  <span className={`text-sm ${isCurrentUser ? 'text-white/80' : 'text-muted-foreground'}`}>
+                    pts
+                  </span>
+                </div>
               </div>
-              <div className="flex items-center gap-2">
-                <span className="text-lg font-bold text-primary">
-                  {entry.score}
-                </span>
-                <span className="text-sm text-muted-foreground">pts</span>
-              </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
 
-        {mode === 'classement' && data.utilisateur && (
-          <div className="mt-6 pt-4 border-t">
-            <h4 className="text-sm font-medium text-muted-foreground mb-3">Votre position</h4>
-            <div className="flex items-center justify-between p-3 bg-primary/10 border border-primary/20 rounded-lg">
-              <div className="flex items-center gap-3">
-                <Badge variant="default" className="flex items-center gap-1">
-                  <span className="w-5 h-5 text-center text-sm font-bold">Vous</span>
-                </Badge>
-                <span className="font-medium">{data.utilisateur.nom_affiche}</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <span className="text-lg font-bold text-primary">
-                  {data.utilisateur.score}
-                </span>
-                <span className="text-sm text-muted-foreground">pts</span>
-              </div>
+        {mode === 'accueil' && (
+          <div className="mt-6 pt-4 ">
+            <div className="flex justify-center">
+              <Link 
+                href="/classement" 
+                className="bg-[#01C9E7] text-white px-6 py-2 rounded-md hover:bg-[#01C9E7]/90 transition-colors font-bold uppercase"
+                style={{ boxShadow: '2px 2px 0 0 #015D6B', borderRadius: '4px' }}
+              >
+                Voir le classement 
+              </Link>
             </div>
           </div>
         )}

@@ -176,9 +176,9 @@ export function RegistrationForm() {
   return (
    
     <Form {...form}>
-      <div className='mb-10'>
+      <div className='mb-10 mt-10'>
          <h3 className="text-sm  text-center text-[#01C9E7] uppercase" style={{ fontWeight: 700, fontSize: 20 }}>Enregistres tes infos</h3>
-      <p className="text-sm text-center mb-[30px]" style={{ fontWeight: 700, color: 'black' }}>En t’inscrivant ci-dessous, tes coordonnées seront utilisées pour te contacter en cas de gain.</p>
+      <p className="text-sm text-center mb-[45px] mt-5" style={{ fontWeight: 700, color: 'black' }}>En t’inscrivant ci-dessous, tes coordonnées seront utilisées pour te contacter en cas de gain.</p>
       </div>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6" id="form">
         {/* Nom & Prénom */}
@@ -267,26 +267,7 @@ export function RegistrationForm() {
         {/* Checkboxes */}
         <div className="space-y-4">
           {/* Certifie achat menu */}
-          <FormField
-            control={form.control}
-            name="certifie_achat_menu"
-            render={({ field }) => (
-              <FormItem className="flex flex-row items-start space-x-3 space-y-0">
-                <FormControl>
-                  <Checkbox
-                    checked={field.value}
-                    onCheckedChange={field.onChange}
-                  />
-                </FormControl>
-                <div className="space-y-1 leading-none">
-                  <FormLabel className="font-normal text-black">
-                    Je certifie que ma participation fait suite à l'achat d'un Menu Best Of ou Maxi Best Of dans un restaurant McDonald's de Guadeloupe sur la période du 17 juillet au 31 août 2025.*
-                  </FormLabel>
-                  <FormMessage />
-                </div>
-              </FormItem>
-            )}
-          />
+
           {/* Accepte règlement */}
           <FormField
             control={form.control}
