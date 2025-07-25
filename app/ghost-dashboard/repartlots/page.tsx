@@ -3,23 +3,22 @@
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { supabase } from '@/lib/supabase-client'
+import { useAuth } from '@/hooks/useAuth'
 import DashboardLayout from '@/components/layouts/DashboardLayout'
-import TableauRepartition from '@/components/TableauRepartition'
-import CreateRepartitionForm from '@/components/CreateRepartitionForm'
+import RepartitionLotJourSecoursCrud from '@/components/RepartitionLotJourSecoursCrud'
 
 export default function RepartLotsPage() {
     const router = useRouter()
+    const { user, loading: authLoading } = useAuth()
     const [loading, setLoading] = useState(true)
     const [periodeId, setPeriodeId] = useState<string | null>(null)
 
     useEffect(() => {
         const checkAuth = async () => {
-            const {
-                data: { user },
-            } = await supabase.auth.getUser()
+            if (authLoading) return // Attendre que l'authentification soit résolue
 
             if (!user || !user.email?.endsWith('@beecee.fr')) {
-                router.push('/login')
+                router.push('/ghost')
                 return
             }
 
@@ -27,7 +26,7 @@ export default function RepartLotsPage() {
         }
 
         checkAuth()
-    }, [router])
+    }, [user, authLoading, router])
 
     useEffect(() => {
         const fetchPeriode = async () => {
@@ -44,26 +43,20 @@ export default function RepartLotsPage() {
         fetchPeriode()
     }, [])
 
-    if (loading || !periodeId) {
+    if (authLoading || loading || !periodeId) {
         return (
             <div className="min-h-screen flex items-center justify-center">
-                Chargement...
+                <div className="text-center">
+                    <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-gray-900 mx-auto mb-4"></div>
+                    <p className="text-gray-600">Chargement...</p>
+                </div>
             </div>
         )
     }
 
     return (
         <DashboardLayout>
-            <div className="mb-6">
-                <h1 className="text-2xl font-bold text-black">Configurer la période de jeu</h1>
-                <p className="text-sm text-muted-foreground">
-                    Définis les dates de début et de fin pendant lesquelles les lots seront attribués.
-                </p>
-            </div>
-<CreateRepartitionForm/>
-           
-            
-            <TableauRepartition periode_id={periodeId} />
+            <RepartitionLotJourSecoursCrud />
         </DashboardLayout>
     )
 }

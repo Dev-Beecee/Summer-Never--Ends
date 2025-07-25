@@ -6,6 +6,7 @@ import Image from "next/image"
 import { useEffect, useState } from "react"
 import { supabase } from "@/lib/supabase-client"
 import { useRouter } from "next/navigation"
+import { useAuth } from "@/hooks/useAuth"
 
 import {
   Sidebar,
@@ -56,6 +57,7 @@ const getNavData = (userRole: string | null) => {
       title: "Répartition des lots",
       url: "/ghost-dashboard/repartlots",
     },
+
     {
       title: "Restaurants",
       url: "/ghost-dashboard/restaurants",
@@ -74,12 +76,12 @@ const getNavData = (userRole: string | null) => {
   if (userRole === "admin-mcdo") {
     const restrictedItems = [
       "Création des lots",
-      "Répartition des lots", 
+      "Répartition des lots",
       "Restaurants",
       "Création utilisateur",
       "Réglages"
     ];
-    
+
     return allItems.filter(item => !restrictedItems.includes(item.title));
   }
 
@@ -90,6 +92,7 @@ const getNavData = (userRole: string | null) => {
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const [userRole, setUserRole] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
+  const { user, loading: authLoading } = useAuth();
   const router = useRouter();
 
   const handleLogout = async () => {
@@ -102,15 +105,11 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   };
 
   useEffect(() => {
-    const fetchUserRole = async () => {
-      const { data: { user }, error } = await supabase.auth.getUser();
-      if (user && user.user_metadata?.role) {
-        setUserRole(user.user_metadata.role);
-      }
-      setLoading(false);
-    };
-    fetchUserRole();
-  }, []);
+    if (user && user.user_metadata?.role) {
+      setUserRole(user.user_metadata.role);
+    }
+    setLoading(authLoading);
+  }, [user, authLoading]);
 
   const navItems = getNavData(userRole);
 
@@ -196,7 +195,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
             ))}
           </SidebarMenu>
         </SidebarGroup>
-        
+
         {/* Bouton de déconnexion */}
         <SidebarGroup className="mt-auto">
           <SidebarMenu>

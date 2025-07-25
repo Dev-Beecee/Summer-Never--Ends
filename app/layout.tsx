@@ -8,6 +8,7 @@ import DynamicBackgroundWrapper from '@/components/DynamicBackgroundWrapper';
 import { ReglageSiteProvider } from "@/hooks/useReglageSite";
 import { ReglageSiteStyles } from '@/components/ReglageSiteStyles';
 import { ReglageSiteStyleProvider } from '@/components/ReglageSiteStyleProvider';
+import { AuthProvider } from '@/hooks/useAuth';
 import localFont from 'next/font/local';
 
 const speede = localFont({
@@ -52,26 +53,28 @@ export default function RootLayout({
     <ReglageSiteProvider>
       <html lang="fr" suppressHydrationWarning>
         <head>
-          <script async src="https://www.googletagmanager.com/gtag/js?id=G-2ZBSQ74P40"></script>
+          <script async src="https://www.googletagmanager.com/gtag/js?id=G-C32FGVKY2D"></script>
           <script dangerouslySetInnerHTML={{
             __html: `
             window.dataLayer = window.dataLayer || [];
             function gtag(){dataLayer.push(arguments);}
             gtag('js', new Date());
-            gtag('config', 'G-2ZBSQ74P40');
+            gtag('config', 'G-C32FGVKY2D');
           ` }} />
         </head>
         <body className={speede.className}>
-          <ReglageSiteStyleProvider>
-            <ReglageSiteStyles />
-            <DynamicBackgroundWrapper>
-              <Suspense fallback={null}>
-                {children}
-                <Footer />
-              </Suspense>
-              <Toaster />
-            </DynamicBackgroundWrapper>
-          </ReglageSiteStyleProvider>
+          <AuthProvider>
+            <ReglageSiteStyleProvider>
+              <ReglageSiteStyles />
+              <DynamicBackgroundWrapper>
+                <Suspense fallback={null}>
+                  {children}
+                  <Footer />
+                </Suspense>
+                <Toaster />
+              </DynamicBackgroundWrapper>
+            </ReglageSiteStyleProvider>
+          </AuthProvider>
         </body>
       </html>
     </ReglageSiteProvider>
