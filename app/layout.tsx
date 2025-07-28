@@ -31,7 +31,7 @@ export async function generateMetadata() {
     title: 'Summer Never Ends - Du 04 au 31 août - McDonald’s Martinique 2025',
     description: 'Scanne ton ticket, cumule des points et tente de gagner de nombreux cadeaux avec McDonald’s Martinique',
     openGraph: {
-      images: ['https://jeu-mcdo.fr/partage.jpg'],
+      images: ['https://summerneverends.jeu-mcdo.fr/partage.jpg'],
       title: 'Summer Never Ends - Du 04 au 31 août - McDonald’s Martinique 2025',
       description: 'Scanne ton ticket, cumule des points et tente de gagner de nombreux cadeaux avec McDonald’s Martinique',
     },
@@ -39,7 +39,7 @@ export async function generateMetadata() {
       card: 'summary_large_image',
       title: 'Summer Never Ends - Du 04 au 31 août - McDonald’s Martinique 2025',
       description: 'Scanne ton ticket, cumule des points et tente de gagner de nombreux cadeaux avec McDonald’s Martinique',
-      images: ['https://jeu-mcdo.fr/partage.jpg'],
+      images: ['https://summerneverends.jeu-mcdo.fr/partage.jpg'],
     }
   };
 }
