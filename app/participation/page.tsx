@@ -39,7 +39,7 @@ export default function ParticipationPage() {
     }
 
     return (
-        <main className="min-h-screen p-6 ">
+        <main className="min-h-screen ">
             <div className="max-w-4xl mx-auto">
                
                 <RegistrationHeader />

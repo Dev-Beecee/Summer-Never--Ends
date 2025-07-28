@@ -60,7 +60,7 @@ export default function Home() {
   return (
     <div className="min-h-screen ">
       
-            <div className="container max-w-2xl mx-auto px-4 py-12">
+            <div className="container ">
         <Suspense fallback={<RegistrationPageSkeleton />}>
        
           <RegistrationHeader />

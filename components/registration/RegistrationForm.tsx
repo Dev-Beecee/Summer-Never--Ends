@@ -180,7 +180,7 @@ export function RegistrationForm() {
          <h3 className="text-sm  text-center text-[#01C9E7] uppercase" style={{ fontWeight: 700, fontSize: 20 }}>Enregistres tes infos</h3>
       <p className="text-sm text-center mb-[45px] mt-5" style={{ fontWeight: 700, color: 'black' }}>En t’inscrivant ci-dessous, tes coordonnées seront utilisées pour te contacter en cas de gain.</p>
       </div>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6" id="form">
+      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6 p-4" id="form">
         {/* Nom & Prénom */}
         <div className="grid gap-6 md:grid-cols-2">
           <FormField
