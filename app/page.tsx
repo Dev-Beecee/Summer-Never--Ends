@@ -58,11 +58,9 @@ export default function Home() {
   }
 
   return (
-    <div className="min-h-screen ">
-      
-            <div className="container ">
+    <div className="min-h-screen flex items-center justify-center">
+      <div className="container max-w-2xl mx-auto ">
         <Suspense fallback={<RegistrationPageSkeleton />}>
-       
           <RegistrationHeader />
           <RegistrationConsigne />
           <ClassementComponent mode="accueil" />
