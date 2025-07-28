@@ -320,7 +320,7 @@ export function RegistrationForm() {
             " transition-all duration-300 btn",
             isLoading ? "bg-primary/80" : "bg-primary hover:bg-primary/90"
           )}
-          style={{ fontWeight: 700 }}
+          style={{ fontWeight: 700, boxShadow: "2px 2px 0 0 #015D6B" }}
           disabled={isLoading}
         >
           {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
