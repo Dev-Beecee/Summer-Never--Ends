@@ -47,7 +47,7 @@ export function UserProfileCard({ inscriptionId }: { inscriptionId: string }) {
     }
 
     return (
-        <div className="w-full flex justify-center">
+        <div className="w-full flex justify-center px-2">
             <div
                 onClick={handleClick}
                 className="flex items-center justify-between rounded-2xl px-6 py-4 cursor-pointer hover:shadow-md transition-shadow max-w-md w-full bg-[#01C9E7] text-white"
