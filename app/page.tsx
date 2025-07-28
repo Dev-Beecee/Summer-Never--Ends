@@ -6,7 +6,7 @@ import { RegistrationHeader } from '@/components/registration/RegistrationHeader
 import { RegistrationConsigne } from '@/components/registration/RegistrationConsigne'
 import { RegistrationPageSkeleton } from '@/components/registration/RegistrationPageSkeleton'
 import { supabase } from '@/lib/supabase-client'
-import ClassementComponent from '@/components/classement/ClassementComponent'
+
 
 
 
@@ -63,7 +63,7 @@ export default function Home() {
         <Suspense fallback={<RegistrationPageSkeleton />}>
           <RegistrationHeader />
           <RegistrationConsigne />
-          <ClassementComponent mode="accueil" />
+          
           <RegistrationForm />
         </Suspense>
       </div>

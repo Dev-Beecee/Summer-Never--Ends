@@ -27,11 +27,15 @@ export function RegistrationConsigne() {
       <Card className=" bg-transparent text-left mb-[45px]" style={{ border: 'none', boxShadow: 'none'}}>
         <CardContent className="p-6 flex flex-col gap-4">
           <h3 className="text-lg font-bold  text-center text-[#01C9E7]" style={{ fontWeight: 700, fontSize: 25 }}>Comment ça marche ?</h3>
-          <ul className="list-disc pl-5 space-y-2 text-sm ">
-            <li>Inscris-toi en quelques secondes.</li>
-            <li>Prend en photo ton ticket de caisse.</li>
-            <li>Ton ticket sera analysé automatiquement pour t'offrir une chance de gratter le Golden Ticket !</li>
-          </ul>
+          
+          <p>
+          1.  Scanne ton ticket de caisse après ton passage en restaurant. 
+          </p>
+          <p className="text-sm font-bold">Chaque ticket scanné te rapporte automatiquement des points.</p>
+          <p>
+          2.  Découvre tes points : le montant de ton ticket détermine la valeur ajoutée à ton score. 
+          </p>
+          <p className="text-sm font-bold">Plus ton score est élevé, plus tu as de chances de faire partie des gagnants à la fin du jeu !</p>
           <p className="text-sm font-bold  text-center" style={{ fontWeight: 700, fontSize: 25 }}>Attention :</p>
           <p className="text-sm ">
             Un ticket = une seule participation, Il ne peut être utilisé qu'une fois. <br />
