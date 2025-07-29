@@ -22,9 +22,6 @@ const formSchema = z.object({
   telephone: z.string().regex(/^(0|\+33)[1-9]([-. ]?[0-9]{2}){4}$/, {
     message: "Veuillez saisir un numéro de téléphone valide.",
   }),
-  certifie_achat_menu: z.boolean().refine(val => val === true, {
-    message: "Vous devez certifier l'achat d'un menu pour participer.",
-  }),
   accepte_reglement: z.boolean().refine(val => val === true, {
     message: "Vous devez accepter le règlement pour participer.",
   }),
@@ -56,7 +53,6 @@ export function RegistrationForm() {
       prenom: '',
       email: '',
       telephone: '',
-      certifie_achat_menu: false,
       accepte_reglement: false,
       accepte_marketing: false,
       utm_source: '',
@@ -169,6 +165,26 @@ export function RegistrationForm() {
     }
   }
 
+  // Ajouter une fonction pour gérer les erreurs de validation
+  const handleSubmit = async (data: FormValues) => {
+    try {
+      // Vérifier si le formulaire est valide
+      const isValid = await form.trigger();
+      if (!isValid) {
+        toast({
+          title: "Erreur de validation",
+          description: "Veuillez corriger les erreurs dans le formulaire",
+          variant: "destructive",
+        });
+        return;
+      }
+      
+      await onSubmit(data);
+    } catch (error) {
+      console.error('Validation error:', error);
+    }
+  };
+
   if (isSubmitted && registrationId) {
     return <RegistrationSuccess registrationId={registrationId} />
   }
@@ -180,7 +196,7 @@ export function RegistrationForm() {
          <h3 className="text-sm  text-center text-[#01C9E7] uppercase" style={{ fontWeight: 700, fontSize: 20 }}>Enregistres tes infos</h3>
       <p className="text-sm text-center mb-[45px] mt-5" style={{ fontWeight: 700, color: 'black' }}>En t’inscrivant ci-dessous, tes coordonnées seront utilisées pour te contacter en cas de gain.</p>
       </div>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6 p-4" id="form">
+      <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-6 p-4" id="form">
         {/* Nom & Prénom */}
         <div className="grid gap-6 md:grid-cols-2">
           <FormField
@@ -322,12 +338,16 @@ export function RegistrationForm() {
           )}
           style={{ fontWeight: 700, boxShadow: "2px 2px 0 0 #015D6B" }}
           disabled={isLoading}
+          onClick={() => {
+            // Ajouter un log pour déboguer
+            console.log('Form errors:', form.formState.errors);
+            console.log('Form values:', form.getValues());
+          }}
         >
           {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
           {hasParticipated ? "Retenter ma chance" : "Valider mon inscription"}
-
         </Button>
-</div>
+        </div>
 
         {/* Mention bas de page */}
         <p className="text-center text-xs text-black mt-4">
