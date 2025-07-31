@@ -46,19 +46,7 @@ export default function GamePage() {
   const [gameResult, setGameResult] = useState<GameResult | null>(null)
   const [checkingLot, setCheckingLot] = useState(false)
 
-  // Simulation d'un lot gagné pour tester le style
-  const simulateWin = () => {
-    setGameResult({
-      result: "win",
-      gain: true,
-      lot: {
-        titre: "Menu Big Mac + Frites + Boisson",
-        image: "/mcdo-goldenticket-gratv3.jpg",
-        instructions: "Présentez ce code en caisse pour récupérer votre menu gratuit"
-      },
-      reason: "Félicitations ! Vous avez gagné un lot !"
-    })
-  }
+
 
   const handleRetry = () => {
     window.location.href = '/'
@@ -281,22 +269,6 @@ export default function GamePage() {
           )}
 
           <div className="flex flex-col items-center gap-4 mt-6">
-            {/* Bouton de simulation pour tester le style */}
-            <button
-              className="font-bold py-2 px-4 mb-2"
-              style={{ 
-                color: '#FFFF', 
-                border: '1px solid white', 
-                background: '#FF6B35',
-                borderRadius: '4px',
-                boxShadow: '2px 2px 0 0 #CC552A',
-                textTransform: 'uppercase'
-              }}
-              onClick={simulateWin}
-            >
-              Simuler un gain (test)
-            </button>
-            
             <button
               className="font-bold py-2 px-4"
               style={{ 
