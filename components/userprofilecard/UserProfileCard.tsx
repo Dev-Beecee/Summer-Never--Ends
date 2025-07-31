@@ -47,7 +47,7 @@ export function UserProfileCard({ inscriptionId }: { inscriptionId: string }) {
     }
 
     return (
-        <div className="w-full flex justify-center px-2">
+        <div className="w-full flex flex-col items-center px-2">
             <div
                 onClick={handleClick}
                 className="flex items-center justify-between rounded-2xl px-6 py-4 cursor-pointer hover:shadow-md transition-shadow max-w-md w-full bg-[#01C9E7] text-white"
@@ -80,6 +80,16 @@ export function UserProfileCard({ inscriptionId }: { inscriptionId: string }) {
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
                     </svg>
                 </div>
+            </div>
+            
+            <div className="w-full flex justify-center mt-4">
+                <button
+                    onClick={() => router.push('/classement')}
+                    className="px-6 py-3 rounded-2xl font-semibold bg-[#01C9E7] text-white hover:shadow-md transition-shadow"
+                    style={{ boxShadow: '2px 2px 0px 0px #015D6B' }}
+                >
+                    Classement
+                </button>
             </div>
         </div>
     )
