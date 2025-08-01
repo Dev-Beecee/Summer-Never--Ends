@@ -10,7 +10,7 @@ export function RegistrationConsigne() {
       {/* Première Card */}
       <Card className="bg-transparent text-center" style={{ border: 'none', boxShadow: 'none' }}>
         <CardContent className="p-6 flex flex-col items-center gap-4">
-          <p className="text-sm font-medium ">Du <span style={{ fontWeight: 700 }}>04 au 31 août</span></p>
+          <p className="text-sm font-medium ">Du <span style={{ fontWeight: 700 }}>07 août au 15 septembre 2025</span></p>
           <h2 className="text-lg font-bold  leading-snug ">
           Scanne ton ticket, cumule des points et tente de gagner d'incroyables lots!
           </h2>
