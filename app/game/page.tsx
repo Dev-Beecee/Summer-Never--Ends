@@ -119,7 +119,7 @@ export default function GamePage() {
         // Calculer les points gagnés
         const montant = parseFloat(participationData.ocr_montant)
         const montantArrondi = Math.ceil(montant)
-        const points = montantArrondi * 100 * 3 
+        const points =  100 * 3 
         setPointsGagnes(points)
 
         // Récupérer le classement

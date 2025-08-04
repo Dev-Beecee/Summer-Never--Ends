@@ -3,7 +3,6 @@
 import { useSearchParams, useRouter } from 'next/navigation'
 import { useEffect, useState } from 'react'
 import { useToast } from '@/hooks/use-toast'
-import { UserProfileCard } from '@/components/userprofilecard/UserProfileCard'
 import Image from 'next/image'
 import { Button } from '@/components/ui/button'
 import {
@@ -118,17 +117,17 @@ export default function UserListParticipation() {
                                             <div className="flex flex-col gap-2 mt-6">
                                                 <span>Date d'achat:</span>
                                                 <div className="flex items-center gap-2 font-bold">
-                                                <span>
-                                                    {new Date(p.ocr_date_achat).toLocaleDateString('fr-FR', {
-                                                        day: '2-digit',
-                                                        month: 'long',
-                                                        year: 'numeric'
-                                                    })}
-                                                </span>
-                                                <span> à</span>
-                                                <span>
-                                                    {p.ocr_heure_achat}
-                                                </span>
+                                                    <span>
+                                                        {new Date(p.ocr_date_achat).toLocaleDateString('fr-FR', {
+                                                            day: '2-digit',
+                                                            month: 'long',
+                                                            year: 'numeric'
+                                                        })}
+                                                    </span>
+                                                    <span> à</span>
+                                                    <span>
+                                                        {p.ocr_heure_achat}
+                                                    </span>
                                                 </div>
                                             </div>
                                         </div>
@@ -139,7 +138,7 @@ export default function UserListParticipation() {
                                             </span>
                                         </div>
                                         <div className=" w-full flex flex-col gap-2 mt-6 bg-white rounded-lg p-2">
-                                            
+
                                             <span className="text-lg font-bold text-[#01C9E7] text-center">
                                                 +{p.score_ajoute} points
                                             </span>
@@ -151,7 +150,7 @@ export default function UserListParticipation() {
                                         <div className=" items-center gap-3">
                                             {p.has_won ? (
                                                 <>
-                                                <div> <p className="font-bold  text-center text-2xl" style={{ fontWeight: 700 }}>Tu as gagné !</p></div>
+                                                    <div> <p className="font-bold  text-center text-2xl" style={{ fontWeight: 700 }}>Tu as gagné !</p></div>
                                                     <div className="flex-shrink-0">
                                                         {p.lot?.photo_url && (
                                                             <Image
@@ -164,40 +163,40 @@ export default function UserListParticipation() {
                                                         )}
                                                     </div>
                                                     <div>
-                                                       
+
                                                         <p className=" text-center" style={{ fontWeight: 700 }}>{p.lot?.titre}</p>
-                                                        
+
                                                     </div>
-    <div className="mt-4">
-      <Dialog>
-        <DialogTrigger asChild>
-          <Button className="w-full">
-            Comment récupérer mon gain ?
-          </Button>
-        </DialogTrigger>
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle>Récupération de votre gain</DialogTitle>
-            <DialogDescription asChild>
-              <div>
-                {p.lot?.instructions
-                  ? <span dangerouslySetInnerHTML={{ __html: p.lot.instructions }} />
-                  : (
-                    <>
-                      Félicitations pour votre gain ! Pour récupérer votre lot, veuillez suivre les instructions envoyées à votre adresse e-mail enregistrée.<br />
-                      Si vous n'avez pas reçu d'e-mail, veuillez contacter notre support client.
-                    </>
-                  )
-                }
-              </div>
-            </DialogDescription>
-          </DialogHeader>
-          <Button onClick={() => document.activeElement && (document.activeElement as HTMLElement).blur()}>
-            Fermer
-          </Button>
-        </DialogContent>
-      </Dialog>
-    </div>
+                                                    <div className="mt-4">
+                                                        <Dialog>
+                                                            <DialogTrigger asChild>
+                                                                <Button className="w-full">
+                                                                    Comment récupérer mon gain ?
+                                                                </Button>
+                                                            </DialogTrigger>
+                                                            <DialogContent>
+                                                                <DialogHeader>
+                                                                    <DialogTitle>Récupération de votre gain</DialogTitle>
+                                                                    <DialogDescription asChild>
+                                                                        <div>
+                                                                            {p.lot?.instructions
+                                                                                ? <span dangerouslySetInnerHTML={{ __html: p.lot.instructions }} />
+                                                                                : (
+                                                                                    <>
+                                                                                        Félicitations pour votre gain ! Pour récupérer votre lot, veuillez suivre les instructions envoyées à votre adresse e-mail enregistrée.<br />
+                                                                                        Si vous n'avez pas reçu d'e-mail, veuillez contacter notre support client.
+                                                                                    </>
+                                                                                )
+                                                                            }
+                                                                        </div>
+                                                                    </DialogDescription>
+                                                                </DialogHeader>
+                                                                <Button onClick={() => document.activeElement && (document.activeElement as HTMLElement).blur()}>
+                                                                    Fermer
+                                                                </Button>
+                                                            </DialogContent>
+                                                        </Dialog>
+                                                    </div>
                                                 </>
                                             ) : null}
                                         </div>
