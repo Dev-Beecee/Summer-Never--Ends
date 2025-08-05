@@ -29,21 +29,24 @@ export function RegistrationConsigne() {
           <h3 className="text-lg font-bold  text-center text-[#01C9E7]" style={{ fontWeight: 700, fontSize: 25 }}>Comment ça marche ?</h3>
           
           <p>
-          1.  Scanne ton ticket de caisse après ton passage en restaurant. 
+          1. Scanne ton ticket de caisse après ton passage en restaurant.
           </p>
-          <p className="text-sm font-bold">Chaque ticket scanné te rapporte automatiquement des points.</p>
+          <p className="text-sm font-bold">Chaque ticket scanné te rapporte automatiquement 100 points.</p>
           <p>
-          2.  Découvre tes points : le montant de ton ticket détermine la valeur ajoutée à ton score. 
+          2. Accumule tes points et augmente tes chances de gagner !
           </p>
-          <p className="text-sm font-bold">Plus ton score est élevé, plus tu as de chances de faire partie des gagnants à la fin du jeu !</p>
+          <p className="text-sm font-bold">Plus tu scannes de tickets, plus tu accumules de points et plus tu as de chances de remporter d'incroyables lots !</p>
+          <p>
+          3. Tente ta chance à chaque participation !
+          </p>
+          <p className="text-sm font-bold">À chaque scan de ticket, tu as une chance de gagner instantanément un lot selon les disponibilités du jour.</p>
           <p className="text-sm font-bold  text-center" style={{ fontWeight: 700, fontSize: 25 }}>Attention :</p>
           <p className="text-sm ">
-            Un ticket = une seule participation, Il ne peut être utilisé qu'une fois. <br />
+            Un ticket = une seule participation. Il ne peut être utilisé qu'une fois. <br />
             Tu peux retenter ta chance à chaque nouvel achat.
           </p>
         </CardContent>
       </Card>
-      
     </div>
   );
 }
