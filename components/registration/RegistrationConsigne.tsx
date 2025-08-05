@@ -1,6 +1,6 @@
 "use client";
 
-import { Card, CardContent } from "@/components/ui/card";
+import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 
 export function RegistrationConsigne() {
@@ -25,8 +25,10 @@ export function RegistrationConsigne() {
 
       {/* Deuxième Card */}
       <Card className=" bg-transparent text-left mb-[45px]" style={{ border: 'none', boxShadow: 'none'}}>
+        <CardHeader className="flex flex-row items-center justify-center">
+        <h3 className="text-lg font-bold  text-center text-[#01C9E7]" style={{ fontWeight: 700, fontSize: 25 }}>Comment ça marche ?</h3>
+        </CardHeader>
         <CardContent className="p-6 flex flex-col gap-4">
-          <h3 className="text-lg font-bold  text-center text-[#01C9E7]" style={{ fontWeight: 700, fontSize: 25 }}>Comment ça marche ?</h3>
           
           <p>
           1. Scanne ton ticket de caisse après ton passage en restaurant.
@@ -40,12 +42,16 @@ export function RegistrationConsigne() {
           3. Tente ta chance à chaque participation !
           </p>
           <p className="text-sm font-bold">À chaque scan de ticket, tu as une chance de gagner instantanément un lot selon les disponibilités du jour.</p>
-          <p className="text-sm font-bold  text-center" style={{ fontWeight: 700, fontSize: 25 }}>Attention :</p>
-          <p className="text-sm ">
+
+        </CardContent>
+        <CardFooter className="flex flex-col items-center justify-center gap-4">
+        <p className="text-sm font-bold  text-center" style={{ fontWeight: 700, fontSize: 25 }}>Attention :</p>
+        <p className="text-sm text-center">
             Un ticket = une seule participation. Il ne peut être utilisé qu'une fois. <br />
             Tu peux retenter ta chance à chaque nouvel achat.
           </p>
-        </CardContent>
+
+        </CardFooter>
       </Card>
     </div>
   );
