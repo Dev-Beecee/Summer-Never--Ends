@@ -5,10 +5,7 @@ import { Footer } from '@/components/footer/Footer';
 import { Suspense } from 'react';
 import { createClient } from '@supabase/supabase-js';
 import DynamicBackgroundWrapper from '@/components/DynamicBackgroundWrapper';
-import { ReglageSiteProvider } from "@/hooks/useReglageSite";
-import { ReglageSiteStyles } from '@/components/ReglageSiteStyles';
-import { ReglageSiteStyleProvider } from '@/components/ReglageSiteStyleProvider';
-import { AuthProvider } from '@/hooks/useAuth';
+import { ClientProviders } from '@/components/ClientProviders';
 import localFont from 'next/font/local';
 
 const speede = localFont({
@@ -28,17 +25,17 @@ export async function generateMetadata() {
   );
   const { data } = await supabase.from('reglage_site').select('*').limit(1).single();
   return {
-    title: 'Summer Never Ends - Du 07 août au 15 septembre - McDonald’s Martinique 2025',
-    description: 'Scanne ton ticket, cumule des points et tente de gagner de nombreux cadeaux avec McDonald’s Martinique',
+    title: 'Summer Never Ends - Du 07 août au 15 septembre - McDonald\'s Martinique 2025',
+    description: 'Scanne ton ticket, cumule des points et tente de gagner de nombreux cadeaux avec McDonald\'s Martinique',
     openGraph: {
       images: ['https://summerneverends.jeu-mcdo.fr/partage.jpg'],
-      title: 'Summer Never Ends - Du 07 août au 15 septembre - McDonald’s Martinique 2025',
-      description: 'Scanne ton ticket, cumule des points et tente de gagner de nombreux cadeaux avec McDonald’s Martinique',
+      title: 'Summer Never Ends - Du 07 août au 15 septembre - McDonald\'s Martinique 2025',
+      description: 'Scanne ton ticket, cumule des points et tente de gagner de nombreux cadeaux avec McDonald\'s Martinique',
     },
     twitter: {
       card: 'summary_large_image',
-      title: 'Summer Never Ends - Du 07 août au 15 septembre - McDonald’s Martinique 2025',
-      description: 'Scanne ton ticket, cumule des points et tente de gagner de nombreux cadeaux avec McDonald’s Martinique',
+      title: 'Summer Never Ends - Du 07 août au 15 septembre - McDonald\'s Martinique 2025',
+      description: 'Scanne ton ticket, cumule des points et tente de gagner de nombreux cadeaux avec McDonald\'s Martinique',
       images: ['https://summerneverends.jeu-mcdo.fr/partage.jpg'],
     }
   };
@@ -50,33 +47,28 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <ReglageSiteProvider>
-      <html lang="fr" suppressHydrationWarning>
-        <head>
-          <script async src="https://www.googletagmanager.com/gtag/js?id=G-C32FGVKY2D"></script>
-          <script dangerouslySetInnerHTML={{
-            __html: `
-            window.dataLayer = window.dataLayer || [];
-            function gtag(){dataLayer.push(arguments);}
-            gtag('js', new Date());
-            gtag('config', 'G-C32FGVKY2D');
-          ` }} />
-        </head>
-        <body className={speede.className}>
-          <AuthProvider>
-            <ReglageSiteStyleProvider>
-              <ReglageSiteStyles />
-              <DynamicBackgroundWrapper>
-                <Suspense fallback={null}>
-                  {children}
-                  <Footer />
-                </Suspense>
-                <Toaster />
-              </DynamicBackgroundWrapper>
-            </ReglageSiteStyleProvider>
-          </AuthProvider>
-        </body>
-      </html>
-    </ReglageSiteProvider>
+    <html lang="fr" suppressHydrationWarning>
+      <head>
+        <script async src="https://www.googletagmanager.com/gtag/js?id=G-C32FGVKY2D"></script>
+        <script dangerouslySetInnerHTML={{
+          __html: `
+          window.dataLayer = window.dataLayer || [];
+          function gtag(){dataLayer.push(arguments);}
+          gtag('js', new Date());
+          gtag('config', 'G-C32FGVKY2D');
+        ` }} />
+      </head>
+      <body className={speede.className}>
+        <ClientProviders>
+          <DynamicBackgroundWrapper>
+            <Suspense fallback={null}>
+              {children}
+              <Footer />
+            </Suspense>
+            <Toaster />
+          </DynamicBackgroundWrapper>
+        </ClientProviders>
+      </body>
+    </html>
   );
 }

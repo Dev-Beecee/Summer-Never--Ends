@@ -720,7 +720,7 @@ export function ParticipationForm() {
                 const ocr_montant = parseFloat(values.ocr_montant);
                 if (ocr_montant && typeof ocr_montant === 'number') {
                     const montantArrondi = Math.ceil(ocr_montant); // montant TTC arrondi à l'euro supérieur
-                    const score =   100 * 3;
+                    const score =   100 ;
                     
                     // Récupérer le score actuel
                     const { data: currentUser, error: fetchError } = await supabase
@@ -812,7 +812,7 @@ export function ParticipationForm() {
                 // Enregistrer l'historique du score après avoir obtenu l'ID de participation
                 if (participationId && ocr_montant && typeof ocr_montant === 'number') {
               
-                    const score =  100 * 3;
+                    const score =  100 ;
                     
                     const { error: historiqueError } = await supabase
                         .from('historique_score')
