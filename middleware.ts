@@ -21,6 +21,11 @@ export async function middleware(req: NextRequest) {
             }
         }
 
+        // Redirection des utilisateurs connectés depuis /ghost vers le dashboard
+        if (req.nextUrl.pathname === '/ghost' && session) {
+            return NextResponse.redirect(new URL('/ghost-dashboard', req.url))
+        }
+
         // Pages protégées
         const protectedPaths = ['/ghost-dashboard']
         const isProtectedPath = protectedPaths.some(path =>
