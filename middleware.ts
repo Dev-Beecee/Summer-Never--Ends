@@ -27,7 +27,7 @@ export async function middleware(req: NextRequest) {
         }
 
         // Pages protégées
-        const protectedPaths = ['/ghost-dashboard']
+        const protectedPaths = ['/ghost-dashboard', '/tricheur', '/perdu', '/participation', '/user-list-participation', '/gagner', '/deja-gagne', '/classement']
         const isProtectedPath = protectedPaths.some(path =>
             req.nextUrl.pathname.startsWith(path)
         )
