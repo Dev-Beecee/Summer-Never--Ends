@@ -41,7 +41,7 @@ export async function generateMetadata() {
       description: 'Scanne ton ticket, cumule des points et tente de gagner de nombreux cadeaux avec McDonald\'s Martinique',
       images: ['https://summerneverends.jeu-mcdo.fr/partage.jpg'],
     }
-  };
+  };  
 }
 
 export default function RootLayout({
