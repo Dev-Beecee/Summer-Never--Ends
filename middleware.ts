@@ -8,6 +8,16 @@ export async function middleware(req: NextRequest) {
     // Créer le client Supabase pour le middleware
     const supabase = createMiddlewareClient({ req, res })
 
+    // Pages à bloquer complètement
+    const blockedPaths = ['/tricheur', '/perdu', '/participation', '/user-list-participation', '/gagner', '/deja-gagne', '/classement']
+    const isBlockedPath = blockedPaths.some(path =>
+        req.nextUrl.pathname.startsWith(path)
+    )
+
+    if (isBlockedPath) {
+        return NextResponse.redirect(new URL('/', req.url))
+    }
+
     // Actualiser la session si elle est expirée - nécessaire pour les routes côté serveur
     try {
         const { data: { session }, error } = await supabase.auth.getSession()
@@ -27,7 +37,7 @@ export async function middleware(req: NextRequest) {
         }
 
         // Pages protégées
-        const protectedPaths = ['/ghost-dashboard', '/tricheur', '/perdu', '/participation', '/user-list-participation', '/gagner', '/deja-gagne', '/classement']
+        const protectedPaths = ['/ghost-dashboard']
         const isProtectedPath = protectedPaths.some(path =>
             req.nextUrl.pathname.startsWith(path)
         )
