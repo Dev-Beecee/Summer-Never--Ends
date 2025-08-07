@@ -1,11 +1,11 @@
 import './globals.css';
-import { Inter } from 'next/font/google';
 import { Toaster } from '@/components/ui/toaster';
 import { Footer } from '@/components/footer/Footer';
 import { Suspense } from 'react';
 import { createClient } from '@supabase/supabase-js';
 import DynamicBackgroundWrapper from '@/components/DynamicBackgroundWrapper';
 import { ClientProviders } from '@/components/ClientProviders';
+import { Skeleton } from '@/components/ui/skeleton';
 import localFont from 'next/font/local';
 
 const speede = localFont({
@@ -25,19 +25,19 @@ export async function generateMetadata() {
   );
   const { data } = await supabase.from('reglage_site').select('*').limit(1).single();
   return {
-    title: 'Summer Never Ends - Du 07 août au 15 septembre - McDonald\'s Martinique 2025',
+    title: 'Summervibes - Du 07 août au 15 septembre - McDonald\'s Martinique 2025',
     description: 'Scanne ton ticket, cumule des points et tente de gagner de nombreux cadeaux avec McDonald\'s Martinique',
     icons: {
       icon: '/favicon.ico',
     },
     openGraph: {
       images: ['https://summervibes.jeu-mcdo.fr/partage.jpg'],
-      title: 'Summer Never Ends - Du 07 août au 15 septembre - McDonald\'s Martinique 2025',
+      title: 'Summervibes - Du 07 août au 15 septembre - McDonald\'s Martinique 2025',
       description: 'Scanne ton ticket, cumule des points et tente de gagner de nombreux cadeaux avec McDonald\'s Martinique',
     },
     twitter: {
       card: 'summary_large_image',
-      title: 'Summer Never Ends - Du 07 août au 15 septembre - McDonald\'s Martinique 2025',
+      title: 'Summervibes - Du 07 août au 15 septembre - McDonald\'s Martinique 2025',
       description: 'Scanne ton ticket, cumule des points et tente de gagner de nombreux cadeaux avec McDonald\'s Martinique',
       images: ['https://summervibes.jeu-mcdo.fr/partage.jpg'],
     }
@@ -64,7 +64,21 @@ export default function RootLayout({
       <body className={speede.className}>
         <ClientProviders>
           <DynamicBackgroundWrapper>
-            <Suspense fallback={null}>
+            <Suspense fallback={
+              <div className="min-h-screen flex items-center justify-center">
+                <div className="container max-w-2xl mx-auto">
+                  <div className="space-y-6">
+                    <Skeleton className="h-12 w-full" />
+                    <div className="space-y-4">
+                      <Skeleton className="h-4 w-3/4" />
+                      <Skeleton className="h-4 w-1/2" />
+                      <Skeleton className="h-4 w-5/6" />
+                    </div>
+                    <Skeleton className="h-12 w-full" />
+                  </div>
+                </div>
+              </div>
+            }>
               {children}
               <Footer />
             </Suspense>

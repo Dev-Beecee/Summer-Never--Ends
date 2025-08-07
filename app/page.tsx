@@ -7,16 +7,11 @@ import { RegistrationConsigne } from '@/components/registration/RegistrationCons
 import { RegistrationPageSkeleton } from '@/components/registration/RegistrationPageSkeleton'
 import { supabase } from '@/lib/supabase-client'
 
-
-
-
-
 export default function Home() {
   const [dateDebut, setDateDebut] = useState<Date | null>(null)
   const [dateFin, setDateFin] = useState<Date | null>(null)
   const [loadingPeriode, setLoadingPeriode] = useState(true)
   
-
   useEffect(() => {
     const fetchPeriode = async () => {
       const { data } = await supabase
@@ -41,14 +36,12 @@ export default function Home() {
   const jeuNonCommence = dateDebut && now < dateDebut
   const jeuTermine = dateFin && now > dateFin
 
-
-
   if (!jeuActif) {
     return (
       <div className="min-h-screen">
         <div className="container max-w-2xl mx-auto text-center">
           <RegistrationHeader />
-          <div className="mt-10 p-4  rounded-lg">
+          <div className="mt-10 p-4 rounded-lg">
             {jeuNonCommence && <p>⏳ Le jeu n'a pas encore commencé. Reviens bientôt !</p>}
             {jeuTermine && <p>🎉 Le jeu est terminé. Merci pour votre participation !</p>}
           </div>
@@ -63,7 +56,6 @@ export default function Home() {
         <Suspense fallback={<RegistrationPageSkeleton />}>
           <RegistrationHeader />
           <RegistrationConsigne />
-          
           <RegistrationForm />
         </Suspense>
       </div>
