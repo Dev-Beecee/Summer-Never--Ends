@@ -47,6 +47,7 @@ export default function ParticipationPage() {
                 <div className="flex justify-between items-center h-full w-full">
                     <UserProfileCard inscriptionId={inscriptionId} />
                 </div>
+                <ParticipationForm />
             </div>
         </main>
     )
