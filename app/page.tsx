@@ -6,6 +6,7 @@ import { RegistrationHeader } from '@/components/registration/RegistrationHeader
 import { RegistrationConsigne } from '@/components/registration/RegistrationConsigne'
 import { RegistrationPageSkeleton } from '@/components/registration/RegistrationPageSkeleton'
 import { supabase } from '@/lib/supabase-client'
+import { RegistrationDate } from '@/components/registration/RegistrationDate'
 
 export default function Home() {
   const [dateDebut, setDateDebut] = useState<Date | null>(null)
@@ -55,8 +56,9 @@ export default function Home() {
       <div className="container max-w-2xl mx-auto ">
         <Suspense fallback={<RegistrationPageSkeleton />}>
           <RegistrationHeader />
-          <RegistrationConsigne />
+          <RegistrationDate />
           <RegistrationForm />
+          <RegistrationConsigne />
         </Suspense>
       </div>
     </div>

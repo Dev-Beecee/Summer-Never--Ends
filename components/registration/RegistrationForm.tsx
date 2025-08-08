@@ -35,16 +35,14 @@ const formSchema = z.object({
 
 type FormValues = z.infer<typeof formSchema>
 
-
 export function RegistrationForm() {
   const [isSubmitted, setIsSubmitted] = useState(false)
   const [registrationId, setRegistrationId] = useState<string | null>(null)
   const [hasParticipated, setHasParticipated] = useState<boolean>(false)
-  const router = useRouter() // Déjà importé
-  const searchParams = useSearchParams();
+  const router = useRouter()
+  const searchParams = useSearchParams()
 
   const { toast } = useToast()
-
 
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
@@ -65,7 +63,7 @@ export function RegistrationForm() {
 
   const isLoading = form.formState.isSubmitting
 
-  // 🔁 Auto-remplissage depuis localStorage
+  // Auto-remplissage depuis localStorage
   useEffect(() => {
     const storedId = localStorage.getItem('inscription_id')
     const storedData = localStorage.getItem('inscription_data')
@@ -140,18 +138,12 @@ export function RegistrationForm() {
         localStorage.setItem('inscription_data', JSON.stringify(userData))
 
         if (result.exists) {
-          // User already exists, show message
-          toast({
-            title: "Information",
-            description: "Vous êtes déjà inscrit. Redirection vers la page de participation...",
-            variant: "default",
-          })
-        }
-
-        // Redirection vers la page de participation dans les deux cas
-        setTimeout(() => {
+          // User already exists, redirect immediately
           router.push(`/participation?id=${id}`)
-        }, result.exists ? 2000 : 0)
+        } else {
+          // New user, redirect to participation page
+          router.push(`/participation?id=${id}`)
+        }
       } else {
         throw new Error("Réponse inattendue du serveur")
       }
@@ -190,11 +182,10 @@ export function RegistrationForm() {
   }
 
   return (
-   
     <Form {...form}>
       <div className='mb-10 mt-10'>
-         <h3 className="text-sm  text-center text-[#01C9E7] uppercase" style={{ fontWeight: 700, fontSize: 20 }}>Enregistre tes infos</h3>
-      <p className="text-sm text-center mb-[45px] mt-5" style={{ fontWeight: 700, color: 'black' }}>En t’inscrivant ci-dessous, tes coordonnées seront utilisées pour te contacter en cas de gain.</p>
+        <h3 className="text-2xl text-center text-[#01C9E7] uppercase" style={{ fontWeight: 700, fontSize: 20 }}>Enregistre tes infos</h3>
+        <p className="text-sm text-center mb-[45px] mt-5" style={{ fontWeight: 700, color: 'black' }}>En t'inscrivant ci-dessous, tes coordonnées seront utilisées pour te contacter en cas de gain.</p>
       </div>
       <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-6 p-4" id="form">
         {/* Nom & Prénom */}
@@ -204,7 +195,7 @@ export function RegistrationForm() {
             name="nom"
             render={({ field }) => (
               <FormItem>
-                <FormLabel className="text-black">Nom</FormLabel>
+                <FormLabel className="text-black">Nom*</FormLabel>
                 <FormControl>
                   <Input
                     placeholder="Nom"
@@ -223,7 +214,7 @@ export function RegistrationForm() {
             name="prenom"
             render={({ field }) => (
               <FormItem>
-                <FormLabel className="text-black">Prénom</FormLabel>
+                <FormLabel className="text-black">Prénom*</FormLabel>
                 <FormControl>
                   <Input
                     placeholder="Prénom"
@@ -244,7 +235,7 @@ export function RegistrationForm() {
           name="email"
           render={({ field }) => (
             <FormItem>
-              <FormLabel className="text-black">Email</FormLabel>
+              <FormLabel className="text-black">Adresse mail*</FormLabel>
               <FormControl>
                 <Input
                   type="email"
@@ -265,7 +256,7 @@ export function RegistrationForm() {
           name="telephone"
           render={({ field }) => (
             <FormItem>
-              <FormLabel className="text-black">Téléphone</FormLabel>
+              <FormLabel className="text-black">Numéro de téléphone*</FormLabel>
               <FormControl>
                 <Input
                   type="tel"
@@ -282,8 +273,6 @@ export function RegistrationForm() {
 
         {/* Checkboxes */}
         <div className="space-y-4">
-          {/* Certifie achat menu */}
-
           {/* Accepte règlement */}
           <FormField
             control={form.control}
@@ -298,7 +287,8 @@ export function RegistrationForm() {
                 </FormControl>
                 <div className="space-y-1 leading-none">
                   <FormLabel className="font-normal">
-                    J’accepte que mes données personnelles saisies dans le formulaire soient utilisées pour être recontacté(e) par l’entreprise dans le cadre du jeu.*                  </FormLabel>
+                    J'accepte le règlement du jeu et j'accepte que mes données personnelles saisies dans le formulaire soient utilisées pour être recontacté(e) par l'entreprise dans le cadre du jeu.*
+                  </FormLabel>
                   <FormMessage />
                 </div>
               </FormItem>
@@ -319,9 +309,8 @@ export function RegistrationForm() {
                 </FormControl>
                 <div className="space-y-1 leading-none">
                   <FormLabel className="font-normal">
-                    J’accepte que mes données personelles saisies dans le formulaire soient utilisées à des fins commerciales.
+                    J'accepte que mes données personnelles saisies dans le formulaire soient utilisées à des fins commerciales.
                   </FormLabel>
-
                 </div>
               </FormItem>
             )}
@@ -330,23 +319,23 @@ export function RegistrationForm() {
 
         {/* Bouton */}
         <div className="flex justify-center">
-        <Button
-          type="submit"
-          className={cn(
-            " transition-all duration-300 btn",
-            isLoading ? "bg-primary/80" : "bg-primary hover:bg-primary/90"
-          )}
-          style={{ fontWeight: 700, boxShadow: "2px 2px 0 0 #015D6B" }}
-          disabled={isLoading}
-        >
-          {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-          {hasParticipated ? "Retenter ma chance" : "Valider mon inscription"}
-        </Button>
+          <Button
+            type="submit"
+            className={cn(
+              "transition-all duration-300 btn",
+              isLoading ? "bg-primary/80" : "bg-primary hover:bg-primary/90"
+            )}
+            style={{ fontWeight: 700, boxShadow: "2px 2px 0 0 #015D6B" }}
+            disabled={isLoading}
+          >
+            {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+            ENREGISTRER
+          </Button>
         </div>
 
         {/* Mention bas de page */}
         <p className="text-center text-xs text-black mt-4">
-          * Champs obligatoires
+          *Ces champs sont obligatoires
         </p>
       </form>
     </Form>
