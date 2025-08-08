@@ -33,62 +33,74 @@ export function UserProfileCard({ inscriptionId }: { inscriptionId: string }) {
         }
     }, [error, toast])
 
-    if (!data?.user || data.user.participationsCount === 0) return null
+    if (!data?.user) return null
 
-    const formattedName = `${data.user.prenom} ${data.user.nom.charAt(0)}.`
-    const participationCount = data.user.participationsCount
-    const participationText =
-        participationCount === 1
-            ? '1 participation enregistrée'
-            : `${participationCount} participations enregistrées`
+    const participationCount = data.user.participationsCount || 0
+    const prenom = data.user.prenom || 'Participant'
 
     const handleClick = () => {
         router.push(`/user-list-participation?inscriptionId=${inscriptionId}`)
     }
 
+    // Si pas de participations, ne pas afficher la carte
+    if (participationCount === 0) return null
+
     return (
-        <div className="w-full flex flex-col items-center px-2">
-            <div
-                onClick={handleClick}
-                className="flex items-center justify-between rounded-2xl px-6 py-4 cursor-pointer hover:shadow-md transition-shadow max-w-md w-full bg-[#01C9E7] text-white"
-                style={{ boxShadow: '2px 2px 0px 0px #015D6B' }}
-            >
-                <div className="basis-[90%]">
-                    <h3 className="font-bold ">{formattedName}</h3>
-                    <p className="text-sm ">{participationText}</p>
-                    <div className=" justify-center items-center gap-4 mt-2">
-                        <div className="flex text-center justify-between items-center">
-                            <p className="text-xs ">Points</p>
-                            <p className="font-semibold text-lg">{data.user.score}</p>
-                        </div>
-                        <div className="flex text-center justify-between items-center">
-                            <p className="text-xs ">Position</p>
-                            <p className="font-semibold text-lg">
-                                {data.user.classement}/{data.user.totalInscrits}
-                            </p>
+        <div className="w-full max-w-md mx-auto h-full">
+            {/* Encadré bleu avec informations utilisateur */}
+            <div className="bg-[#01C9E7] text-white rounded-lg p-6 mb-4 text-center" style={{ boxShadow: '2px 2px 0 0 #015D6B' }}>
+                {/* Message personnalisé */}
+                <p className="text-white text-sm font-medium mb-4">
+                    {prenom}, tu as {participationCount} participation{participationCount > 1 ? 's' : ''} valides donc :
+                </p>
+
+                {/* Chances de gagner - Style ruban similaire à l'image */}
+                <div className="mb-4">
+                    <div className="relative text-white px-6 py-4 transform rotate-1" style={{
+                        backgroundImage: `url("data:image/svg+xml,%3Csvg width='274' height='73' viewBox='0 0 274 73' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0.000167611 0.691636L270.281 7.0776L273.426 54.8444L4.73061 72.5361L0.000167611 0.691636Z' fill='%23FFFFFF'/%3E%3C/svg%3E")`,
+                        backgroundSize: 'cover',
+                        backgroundRepeat: 'no-repeat',
+                        backgroundPosition: 'center',
+                        minHeight: '70px',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center'
+                    }}>
+                        <div className="transform -rotate-1">
+                            <h2 className="text-2xl font-bold text-[#01C9E7]">
+                                {participationCount} chance{participationCount > 1 ? 's' : ''} de gagner !
+                            </h2>
                         </div>
                     </div>
                 </div>
-                <div className="ml-4 text-black basis-[10%]">
-                    <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        className="h-5 w-5"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        stroke="#FFFF"
-                    >
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                    </svg>
+
+                {/* Description du lot */}
+                <div className="mb-6">
+                    <p className="text-sm">
+                        <span className="font-bold uppercase">1 BILLET D'AVION</span> au tirage au sort<br />
+                        qui aura lieu le 16 septembre
+                    </p>
                 </div>
-            </div>
-            
-            <div className="w-full flex justify-center mt-4">
+
+                {/* Bouton Voir mes participations */}
                 <button
-                    onClick={() => router.push('/classement')}
-                    className="px-6 py-3 rounded-2xl font-semibold bg-[#01C9E7] text-white hover:shadow-md transition-shadow"
-                    style={{ boxShadow: '2px 2px 0px 0px #015D6B' }}
+                    onClick={handleClick}
+                    className="inline-flex items-center justify-center font-bold py-2 px-6 bg-white text-[#01C9E7] rounded-md border border-[#01C9E7] hover:shadow-md transition-shadow"
+                    style={{ boxShadow: '2px 2px 0 0 #015D6B' }}
                 >
-                    Classement
+                    VOIR MES PARTICIPATIONS
+                    <span className="ml-2" aria-hidden>→</span>
+                </button>
+            </div>
+
+            {/* Bouton Augmente tes chances */}
+            <div className="text-center">
+                <button
+                    onClick={() => router.push('/')}
+                    className="font-bold py-2 px-4 bg-[#01C9E7] text-white rounded-md border border-white hover:shadow-md transition-shadow"
+                    style={{ boxShadow: '2px 2px 0 0 #015D6B' }}
+                >
+                    AUGMENTE TES CHANCES<br />AVEC UN NOUVEAU TICKET
                 </button>
             </div>
         </div>

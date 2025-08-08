@@ -1,7 +1,7 @@
 'use client'
 
 import { useSearchParams, useRouter } from 'next/navigation'
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useCallback } from 'react'
 import { useToast } from '@/hooks/use-toast'
 import Image from 'next/image'
 import { Button } from '@/components/ui/button'
@@ -15,73 +15,247 @@ import {
 } from '@/components/ui/dialog'
 import { RegistrationHeader } from '@/components/registration/RegistrationHeader'
 
-const fetcher = (url: string, inscriptionId: string) =>
+interface User {
+    prenom: string
+    nom: string
+    initiale: string
+    participationsCount: number
+    score: number
+    classement: number
+    totalInscrits: number
+}
+
+interface Lot {
+    titre: string
+    photo_url?: string
+    instructions?: string
+}
+
+interface Participation {
+    id: string
+    image_url: string
+    ocr_date_achat: string
+    ocr_heure_achat: string
+    ocr_montant: number
+    ocr_restaurant: string
+    contient_menu_mxbo?: string | null
+    created_at: string
+    statut_validation: string
+    raison_invalide?: string | null
+    restaurant?: { nom: string } | null
+    has_won: boolean
+    lot?: Lot | null
+    date_attribution?: string | null
+    score_ajoute: number
+}
+
+interface UserParticipationData {
+    user: User
+    participations: Participation[]
+}
+
+const API_URL = 'https://kgdpgxvhqipihpgyhyux.supabase.co/functions/v1/get-user-participations'
+
+const fetcher = (url: string, inscriptionId: string): Promise<UserParticipationData> =>
     fetch(url, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ inscription_id: inscriptionId })
-    }).then(res => res.json())
+    }).then(res => {
+        if (!res.ok) {
+            throw new Error('Erreur lors de la récupération des données')
+        }
+        return res.json()
+    })
+
+const formatDate = (dateString: string): string => {
+    return new Date(dateString).toLocaleDateString('fr-FR', {
+        day: '2-digit',
+        month: '2-digit',
+        year: 'numeric'
+    })
+}
+
+const ParticipationCard = ({ participation }: { participation: Participation }) => {
+
+    
+    return (
+        <div className="bg-[#01C9E7] text-white rounded-lg overflow-hidden">
+            <div className="p-4">
+                <div className="mb-4">
+                    <p className="text-sm mb-1">Restaurant détecté:</p>
+                    <h3 className="font-bold text-base">
+                        {participation.restaurant?.nom || participation.ocr_restaurant}
+                    </h3>
+                </div>
+
+                <div className="mb-4">
+                    <p className="text-sm mb-1">Date d'achat:</p>
+                    <p className="font-bold">
+                        {formatDate(participation.ocr_date_achat)} à {participation.ocr_heure_achat}
+                    </p>
+                </div>
+
+                <div className="mb-4">
+                    <p className="text-sm mb-1">Montant:</p>
+                    <p className="font-bold">
+                        {participation.ocr_montant}€
+                    </p>
+                </div>
+
+                <div className="bg-white text-[#01C9E7] rounded-md py-2 px-4 text-center font-bold mb-4">
+                    + 1 chance de gagner
+                </div>
+
+                {participation.has_won && (
+                    <>
+                        <div className="bg-white text-[#01C9E7] rounded-md py-2 px-4 text-center font-bold mb-4">
+                            + {participation.lot?.titre} !
+                        </div>
+                        
+                        {participation.lot?.photo_url && (
+                            <div className="flex justify-center mb-4">
+                                <div className="w-32 h-32 bg-black rounded-md flex items-center justify-center">
+                                    <Image
+                                        src={participation.lot.photo_url}
+                                        alt={participation.lot.titre}
+                                        width={120}
+                                        height={120}
+                                        className="rounded-md object-cover"
+                                    />
+                                </div>
+                            </div>
+                        )}
+                    </>
+                )}
+            </div>
+
+            {participation.has_won && (
+                <div className="bg-white mx-4 mb-4 rounded-md">
+                    <Dialog>
+                        <DialogTrigger asChild>
+                            <Button 
+                                className="w-full bg-[#01C9E7] hover:bg-[#00b8d4] text-white font-bold py-3 rounded-md"
+                                style={{ textTransform: 'uppercase' }}
+                            >
+                                JE SOUHAITE RÉCUPÉRER MON GAIN
+                            </Button>
+                        </DialogTrigger>
+                        <DialogContent>
+                            <DialogHeader>
+                                <DialogTitle>Récupération de votre gain</DialogTitle>
+                                <DialogDescription asChild>
+                                    <div>
+                                        {participation.lot?.instructions
+                                            ? <span dangerouslySetInnerHTML={{ __html: participation.lot.instructions }} />
+                                            : (
+                                                <>
+                                                    Félicitations pour votre gain ! Pour récupérer votre lot, veuillez suivre les instructions envoyées à votre adresse e-mail enregistrée.<br />
+                                                    Si vous n'avez pas reçu d'e-mail, veuillez contacter notre support client.
+                                                </>
+                                            )
+                                        }
+                                    </div>
+                                </DialogDescription>
+                            </DialogHeader>
+                            <Button onClick={() => document.activeElement && (document.activeElement as HTMLElement).blur()}>
+                                Fermer
+                            </Button>
+                        </DialogContent>
+                    </Dialog>
+                </div>
+            )}
+        </div>
+    )
+}
+
+const LoadingState = () => (
+    <div className="min-h-screen flex items-center justify-center">
+        <div className="text-center">
+            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#01C9E7] mx-auto mb-4"></div>
+            <p className="text-gray-600">Chargement...</p>
+        </div>
+    </div>
+)
+
+const ErrorState = ({ message }: { message: string }) => (
+    <div className="min-h-screen flex items-center justify-center">
+        <div className="text-center">
+            <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
+                <p className="font-semibold">Erreur</p>
+                <p>{message}</p>
+            </div>
+        </div>
+    </div>
+)
 
 export default function UserListParticipation() {
     const router = useRouter()
     const searchParams = useSearchParams()
     const inscriptionId = searchParams.get('inscriptionId')
     const { toast } = useToast()
-    const [data, setData] = useState<any>(null)
+    const [data, setData] = useState<UserParticipationData | null>(null)
     const [loading, setLoading] = useState(true)
-    const [openDialog, setOpenDialog] = useState(false)
+    const [error, setError] = useState<string | null>(null)
 
-    useEffect(() => {
-        if (!inscriptionId) return
-
-        const fetchData = async () => {
-            try {
-                setLoading(true)
-                const response = await fetcher(
-                    'https://kgdpgxvhqipihpgyhyux.supabase.co/functions/v1/get-user-participations',
-                    inscriptionId
-                )
-                setData(response)
-            } catch (error: any) {
-                toast({
-                    title: 'Erreur',
-                    description: error.message,
-                    variant: 'destructive'
-                })
-            } finally {
-                setLoading(false)
-            }
+    const fetchData = useCallback(async () => {
+        if (!inscriptionId) {
+            setError('ID d\'inscription manquant')
+            setLoading(false)
+            return
         }
 
-        fetchData()
+        try {
+            setLoading(true)
+            setError(null)
+            const response = await fetcher(API_URL, inscriptionId)
+            setData(response)
+        } catch (error: any) {
+            const errorMessage = error.message || 'Une erreur est survenue'
+            setError(errorMessage)
+            toast({
+                title: 'Erreur',
+                description: errorMessage,
+                variant: 'destructive'
+            })
+        } finally {
+            setLoading(false)
+        }
     }, [inscriptionId, toast])
 
-    if (loading) return <div className="text-center py-8">Chargement...</div>
-    if (!data) return <div className="text-center py-8">Aucune donnée disponible</div>
+    useEffect(() => {
+        fetchData()
+    }, [fetchData])
 
-    const formattedName = `${data.user.prenom} ${data.user.nom.charAt(0)}.`
-    const participationCount = data.user.participationsCount
-    const participationText =
-        participationCount === 1
-            ? '1 participation enregistrée'
-            : `${participationCount} participations enregistrées`
+    const handleBack = useCallback(() => {
+        router.back()
+    }, [router])
+
+    if (loading) return <LoadingState />
+    if (error) return <ErrorState message={error} />
+    if (!data) return <ErrorState message="Aucune donnée disponible" />
+
+    const { user, participations } = data
+    const formattedName = `${user.prenom} ${user.nom.charAt(0)}.`
+    const participationText = user.participationsCount === 1
+        ? '1 participation enregistrée'
+        : `${user.participationsCount} participations enregistrées`
 
     return (
         <>
-            <div><RegistrationHeader /></div>
+            <RegistrationHeader />
             <div className="container mx-auto px-4 py-8">
                 <div className="max-w-4xl mx-auto">
-                    {/* En-tête avec titre à gauche et bouton à droite */}
                     <div className="flex justify-between items-center mb-8">
                         <div>
-                            <h1 className="text-3xl font-bold  mb-2">
+                            <h1 className="text-3xl font-bold mb-2">
                                 {formattedName}
                             </h1>
-                            <p className="text-lg ">{participationText}</p>
+                            <p className="text-lg">{participationText}</p>
                         </div>
                         <button
-                            onClick={() => router.back()}
-                            className="flex items-center gap-2 px-4 py-2  bg-[#01C9E7] text-white transition-colors"
+                            onClick={handleBack}
+                            className="flex items-center gap-2 px-4 py-2 bg-[#01C9E7] text-white transition-colors rounded-md hover:bg-[#00b8d4]"
                             style={{ boxShadow: '2px 2px 0px 0px #015D6B' }}
                         >
                             <svg
@@ -100,114 +274,16 @@ export default function UserListParticipation() {
                         </button>
                     </div>
 
-                    <h2 className="text-2xl font-extrabold text-center  uppercase mb-6">
-                        Liste de mes participations
-                    </h2>
-
-                    {data.participations?.length > 0 ? (
+                    {participations?.length > 0 ? (
                         <div className="space-y-6">
-                            {data.participations.map((p: any) => (
-                                <div key={p.id} className="p-4 bg-[#01C9E7] text-white rounded-lg  ">
-                                    <div className="">
-                                        <div>
-                                            <span>Restaurant détecté:</span>
-                                            <h3 className="font-bold text-lg ">
-                                                {p.restaurant?.nom || p.ocr_restaurant}
-                                            </h3>
-                                            <div className="flex flex-col gap-2 mt-6">
-                                                <span>Date d'achat:</span>
-                                                <div className="flex items-center gap-2 font-bold">
-                                                    <span>
-                                                        {new Date(p.ocr_date_achat).toLocaleDateString('fr-FR', {
-                                                            day: '2-digit',
-                                                            month: 'long',
-                                                            year: 'numeric'
-                                                        })}
-                                                    </span>
-                                                    <span> à</span>
-                                                    <span>
-                                                        {p.ocr_heure_achat}
-                                                    </span>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div className="flex flex-col gap-2 mt-6">
-                                            <span>Montant:</span>
-                                            <span className="text-lg font-bold ">
-                                                {p.ocr_montant} €
-                                            </span>
-                                        </div>
-                                        <div className=" w-full flex flex-col gap-2 mt-6 bg-white rounded-lg p-2">
-
-                                            <span className="text-lg font-bold text-[#01C9E7] text-center">
-                                                +{p.score_ajoute} points
-                                            </span>
-                                        </div>
-                                    </div>
-
-                                    {/* Section résultat du tirage */}
-                                    <div className={`mt-4 p-3 rounded-lg ${p.has_won ? '' : ''}`}>
-                                        <div className=" items-center gap-3">
-                                            {p.has_won ? (
-                                                <>
-                                                    <div> <p className="font-bold  text-center text-2xl" style={{ fontWeight: 700 }}>Tu as gagné !</p></div>
-                                                    <div className="flex-shrink-0">
-                                                        {p.lot?.photo_url && (
-                                                            <Image
-                                                                src={p.lot.photo_url}
-                                                                alt={p.lot.titre}
-                                                                width={120}
-                                                                height={120}
-                                                                className="rounded-md object-cover mx-auto"
-                                                            />
-                                                        )}
-                                                    </div>
-                                                    <div>
-
-                                                        <p className=" text-center" style={{ fontWeight: 700 }}>{p.lot?.titre}</p>
-
-                                                    </div>
-                                                    <div className="mt-4">
-                                                        <Dialog>
-                                                            <DialogTrigger asChild>
-                                                                <Button className="w-full">
-                                                                    Comment récupérer mon gain ?
-                                                                </Button>
-                                                            </DialogTrigger>
-                                                            <DialogContent>
-                                                                <DialogHeader>
-                                                                    <DialogTitle>Récupération de votre gain</DialogTitle>
-                                                                    <DialogDescription asChild>
-                                                                        <div>
-                                                                            {p.lot?.instructions
-                                                                                ? <span dangerouslySetInnerHTML={{ __html: p.lot.instructions }} />
-                                                                                : (
-                                                                                    <>
-                                                                                        Félicitations pour votre gain ! Pour récupérer votre lot, veuillez suivre les instructions envoyées à votre adresse e-mail enregistrée.<br />
-                                                                                        Si vous n'avez pas reçu d'e-mail, veuillez contacter notre support client.
-                                                                                    </>
-                                                                                )
-                                                                            }
-                                                                        </div>
-                                                                    </DialogDescription>
-                                                                </DialogHeader>
-                                                                <Button onClick={() => document.activeElement && (document.activeElement as HTMLElement).blur()}>
-                                                                    Fermer
-                                                                </Button>
-                                                            </DialogContent>
-                                                        </Dialog>
-                                                    </div>
-                                                </>
-                                            ) : null}
-                                        </div>
-                                    </div>
-                                </div>
+                            {participations.map((participation) => (
+                                <ParticipationCard key={participation.id} participation={participation} />
                             ))}
                         </div>
                     ) : (
-                        <p className="text-center text-gray-500 py-8">
-                            Aucune participation enregistrée
-                        </p>
+                        <div className="text-center py-12">
+                            <p className="text-gray-500 text-lg">Aucune participation enregistrée</p>
+                        </div>
                     )}
                 </div>
             </div>
