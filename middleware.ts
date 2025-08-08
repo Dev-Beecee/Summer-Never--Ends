@@ -9,7 +9,7 @@ export async function middleware(req: NextRequest) {
     const supabase = createMiddlewareClient({ req, res })
 
     // Pages à bloquer complètement
-    const blockedPaths = ['/tricheur', '/perdu', '/user-list-participation', '/gagner',  '/classement']
+    const blockedPaths = [  '/classement']
     const isBlockedPath = blockedPaths.some(path =>
         req.nextUrl.pathname.startsWith(path)
     )

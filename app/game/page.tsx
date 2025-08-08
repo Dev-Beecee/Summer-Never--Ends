@@ -6,6 +6,7 @@ import { supabase } from '@/lib/supabase-client'
 import { Loader2, Trophy, Medal } from 'lucide-react'
 import ShareButton from '@/components/ShareButton'
 import { RegistrationHeader } from '@/components/registration/RegistrationHeader'
+import Link from 'next/link'
 
 interface ParticipationData {
   id: string
@@ -45,7 +46,7 @@ export default function GamePage() {
   const [error, setError] = useState<string | null>(null)
   const [gameResult, setGameResult] = useState<GameResult | null>(null)
   const [checkingLot, setCheckingLot] = useState(false)
-
+  const [participationsCount, setParticipationsCount] = useState<number | null>(null)
 
 
   const handleRetry = () => {
@@ -115,6 +116,25 @@ export default function GamePage() {
         }
 
         setUser(userData)
+
+        // Récupérer le nombre de participations valides pour cet utilisateur (pour les chances de gagner)
+        try {
+          const countResponse = await fetch(
+            'https://kgdpgxvhqipihpgyhyux.supabase.co/functions/v1/get-user-participations',
+            {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ inscription_id: participationData.inscription_id })
+            }
+          )
+          const countJson = await countResponse.json()
+          const count = countJson?.user?.participationsCount
+          if (typeof count === 'number') {
+            setParticipationsCount(count)
+          }
+        } catch (e) {
+          // en cas d'erreur, on n'empêche pas l'affichage de la page
+        }
 
         // Calculer les points gagnés
         const montant = parseFloat(participationData.ocr_montant)
@@ -189,12 +209,24 @@ export default function GamePage() {
       
       <div className=" flex items-center justify-center p-4">
         <div className="max-w-md w-full p-8 text-center">
+          {/* Hero header image */}
+          <div className="w-full overflow-hidden rounded-md mb-6">
+            <img src="/header.png" alt="Grand jeu Summer Vibes" className="w-full h-auto" />
+          </div>
+
+          {/* Ligne d'information utilisateur */}
+          {user && (
+            <p className="text-white text-sm font-medium bg-[#01C9E7] rounded-md py-2 px-4 inline-block mb-4" style={{ boxShadow: '2px 2px 0 0 #015D6B' }}>
+              {user.prenom}, tu as {participationsCount ?? 1} participation{(participationsCount ?? 1) > 1 ? 's' : ''} valides donc :
+            </p>
+          )}
+
           {/* Titre principal */}
           <h1 className="text-2xl font-bold text-black mb-6">
             Ton ticket a bien été enregistré et te rapporte
           </h1>
 
-          {/* Points gagnés */}
+          {/* Ruban '1 chance de gagner !' */}
           <div className="mb-8">
             <div className="relative text-white px-6 py-4 transform rotate-1 " style={{
               backgroundImage: `url("data:image/svg+xml,%3Csvg width='274' height='73' viewBox='0 0 274 73' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0.000167611 0.691636L270.281 7.0776L273.426 54.8444L4.73061 72.5361L0.000167611 0.691636Z' fill='%2301C9E7'/%3E%3C/svg%3E")`,
@@ -207,30 +239,13 @@ export default function GamePage() {
               justifyContent: 'center'
             }}>
               <div className="transform -rotate-1">
-                <p className="text-3xl font-bold">{pointsGagnes} points !</p>
+                <p className="text-3xl font-bold">{(participationsCount ?? 1)} chance{(participationsCount ?? 1) > 1 ? 's' : ''} de gagner !</p>
               </div>
             </div>
           </div>
 
-          {/* Classement */}
-          <div className="mb-6">
-            <div className="flex items-center justify-center gap-2 mb-2">
-              {classement <= 3 ? (
-                <Trophy className="h-6 w-6 text-yellow-500" />
-              ) : (
-                <Medal className="h-6 w-6 text-gray-400" />
-              )}
-              <p className="text-lg font-semibold text-black-700">
-                {classement === 1 ? '1er' : 
-                 classement === 2 ? '2e' : 
-                 classement === 3 ? '3e' : 
-                 `${classement}e`} du classement
-              </p>
-            </div>
-            <p className="text-sm text-gray-500">
-              Score total : {user.score} points
-            </p>
-          </div>
+          {/* Sous-texte explicatif */}
+          <p className="text-sm text-gray-700 mb-6"><span className="uppercase font-bold">1 billet d’avion</span> au tirage au sort qui aura lieu le 16 septembre</p>
 
           {/* Section Surprise - Lot gagné */}
           {checkingLot && (
@@ -269,6 +284,18 @@ export default function GamePage() {
           )}
 
           <div className="flex flex-col items-center gap-4 mt-6">
+            {/* Bouton vers la liste des participations */}
+            {participation?.inscription_id && (
+              <Link
+                href={`/user-list-participation?inscriptionId=${participation.inscription_id}`}
+                className="inline-flex items-center justify-center font-bold py-2 px-4 bg-white text-[#01C9E7] rounded-md"
+                style={{ border: '1px solid #01C9E7', boxShadow: '2px 2px 0 0 #015D6B' }}
+              >
+                Voir mes participations
+                <span className="ml-2" aria-hidden>→</span>
+              </Link>
+            )}
+
             <button
               className="font-bold py-2 px-4"
               style={{ 
@@ -281,16 +308,14 @@ export default function GamePage() {
               }}
               onClick={handleRetry}
             >
-              Retente ma chance
+              Augmente tes chances avec un nouveau ticket
             </button>
             <div className="mt-[20px]">
-              <ShareButton inscriptionId={participation.inscription_id || "demo"} canal="whatsapp" shareUrl={typeof window !== 'undefined' ? window.location.origin + '/' : ''}>
-                <svg width="19" height="18" viewBox="0 0 19 18" fill="none" xmlns="http://www.w3.org/2000/svg" style={{ marginRight: '8px' }}>
-                  <path d="M9.52831 2.46777C5.82321 2.46777 2.80792 5.37202 2.80661 8.94124C2.80574 10.0826 3.11581 11.1966 3.70371 12.1778L2.75 15.5323L6.31356 14.6321C7.30482 15.1507 8.40701 15.4211 9.52569 15.4204H9.52831C13.2334 15.4204 16.2487 12.5157 16.25 8.94647C16.2509 7.2176 15.5524 5.59019 14.2829 4.36692C13.0139 3.14321 11.3264 2.46821 9.52831 2.46777ZM9.52831 14.3269H9.52613C8.52364 14.3269 7.54032 14.0673 6.68242 13.577L6.47774 13.4603L4.3639 13.9942L4.92829 12.0084L4.79547 11.805C4.23757 10.9541 3.94058 9.9587 3.94105 8.94124C3.94235 5.97429 6.449 3.56127 9.53048 3.56127C11.0225 3.56171 12.4251 4.12218 13.4803 5.13903C14.5355 6.15589 15.116 7.50806 15.1151 8.94603C15.1138 11.913 12.6076 14.3269 9.52787 14.3269H9.52831ZM12.5928 10.2965C12.4247 10.2159 11.599 9.8244 11.4449 9.76997C11.2911 9.7164 11.1792 9.68853 11.0673 9.85053C10.9558 10.0125 10.6336 10.377 10.536 10.4846C10.4376 10.5926 10.3396 10.6057 10.1715 10.5251C10.0034 10.4441 9.46211 10.2734 8.82108 9.72206C8.32158 9.29355 7.98452 8.764 7.88653 8.60156C7.78855 8.44 7.87608 8.35247 7.96013 8.2719C8.03547 8.20005 8.12823 8.08334 8.21184 7.98884C8.29545 7.89434 8.32332 7.82684 8.37994 7.71884C8.43568 7.61127 8.40781 7.51634 8.36556 7.43577C8.32332 7.35434 7.988 6.55827 7.84734 6.23471C7.71147 5.91942 7.57298 5.96166 7.46977 5.95643C7.37179 5.95208 7.26031 5.95077 7.14752 5.95077C7.03647 5.95077 6.854 5.99127 6.69984 6.15327C6.54611 6.31527 6.11194 6.70634 6.11194 7.5024C6.11194 8.2989 6.71377 9.06797 6.79782 9.17597C6.88187 9.28353 7.98234 10.9179 9.66723 11.619C10.0679 11.785 10.3805 11.8847 10.6249 11.9596C11.0272 12.0828 11.3935 12.065 11.6826 12.0236C12.0049 11.977 12.6764 11.6325 12.8158 11.255C12.956 10.8774 12.956 10.5534 12.9142 10.4859C12.8733 10.4184 12.7609 10.3779 12.5928 10.2965Z" fill="white"/>
-                </svg> Partager ce jeu À mes amis !
-              </ShareButton>
+              <ShareButton inscriptionId={participation.inscription_id || "demo"} canal="whatsapp" shareUrl={typeof window !== 'undefined' ? window.location.origin + '/' : ''} />
             </div>
           </div>
+
+          
         </div>
       </div>
     </div>
