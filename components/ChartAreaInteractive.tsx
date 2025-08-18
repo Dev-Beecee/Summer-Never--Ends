@@ -122,7 +122,7 @@ export function ChartAreaInteractive() {
                                 const date = new Date(value)
                                 return date.toLocaleDateString("fr-FR", {
                                     day: "2-digit",
-                                    month: "short",
+                                    month: "numeric",
                                 })
                             }}
                         />

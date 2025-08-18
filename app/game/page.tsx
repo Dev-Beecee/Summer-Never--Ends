@@ -209,11 +209,6 @@ export default function GamePage() {
       
       <div className=" flex items-center justify-center p-4">
         <div className="max-w-md w-full p-8 text-center">
-          {/* Hero header image */}
-          <div className="w-full overflow-hidden rounded-md mb-6">
-            <img src="/header.png" alt="Grand jeu Summer Vibes" className="w-full h-auto" />
-          </div>
-
           {/* Ligne d'information utilisateur */}
           {user && (
             <p className="text-white text-sm font-medium bg-[#01C9E7] rounded-md py-2 px-4 inline-block mb-4" style={{ boxShadow: '2px 2px 0 0 #015D6B' }}>
